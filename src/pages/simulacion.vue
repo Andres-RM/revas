@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <div class="fit row wrap justify-start items-start content-start q-gutter-md">
+    <div class="row wrap q-col-gutter-md">
       <div class="col col-md-2">
         <q-card>
           <q-card-section>
@@ -43,8 +43,8 @@
           </q-card-section>
         </q-card>
       </div>
-      <div class="col col-md-9">
-        <div class="row fit justify-start items-center content-center">
+      <div class="col col-md-10">
+        <div class="row q-col-gutter-sm">
           <template v-if="resultados.vacas.length">
             <div class="col col-md-6">
               <q-card>
