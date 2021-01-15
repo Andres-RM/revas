@@ -1,6 +1,6 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <q-header bordered class="transparent">
+    <q-header elevated class="bg-white">
       <r-menu>
         <q-toolbar-title slot="logo">
           Movimiento de rebaños vacunos
