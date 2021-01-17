@@ -112,7 +112,7 @@
                                     snap
                                     label
                                     label-always
-                                    @change="handleChange"
+                                    @change="handleChange($event)"
                                     :label-value="anio.rate_partos.default + '%'"
                                     :step="anio.rate_partos.step"
                                   />
@@ -138,7 +138,7 @@
                                     snap
                                     label
                                     label-always
-                                    @change="handleChange"
+                                    @change="handleChange($event)"
                                     :label-value="
                                   anio.rate_mortalidad.default + '%'
                                 "
@@ -168,7 +168,7 @@
                                     snap
                                     label
                                     label-always
-                                    @change="handleChange"
+                                    @change="handleChange($event)"
                                     :label-value="anio.rate_descarte.default + '%'"
                                     :step="anio.rate_descarte.step"
                                   />
@@ -187,12 +187,12 @@
                                   Math.round(anio.reemplazo)
                                 }}</span>
                             </p>
-                            <p>
-                              Compras (n):
-                              <span class="text-weight-medium">{{
-                                  Math.round(anio.compras)
-                                }}</span>
-                            </p>
+                            <div class="row q-gutter-md items-center content-center">
+                              <p class="q-mb-none">Compras (n):</p>
+                              <div class="col">
+                                <q-input v-model.number="anio.compras" dense type="number" hide-hint hide-bottom-space></q-input>
+                              </div>
+                            </div>
                           </div>
                           <div class="col-12 col-md-4">
                             <p>
@@ -201,12 +201,12 @@
                                   Math.round(anio.disponibles)
                                 }}</span>
                             </p>
-                            <p>
-                              Ventas (n):
-                              <span class="text-weight-medium">{{
-                                  Math.round(anio.ventas)
-                                }}</span>
-                            </p>
+                            <div class="row q-gutter-md items-center content-center">
+                              <p class="q-mb-none">Ventas (n):</p>
+                              <div class="col">
+                                <q-input v-model.number="anio.ventas" dense type="number" hide-hint hide-bottom-space></q-input>
+                              </div>
+                            </div>
                             <p class="text-body1">
                               Total (n):
                               <span class="text-weight-medium">
@@ -299,7 +299,7 @@ export default {
             return data.numero - data.reemplazo + data.compras
           },
           calcularVentas: data => {
-            return data.reemplazo
+            return Math.round(data.reemplazo)
           },
           calcularTotal: data => {
             return data.disponibles
@@ -604,7 +604,7 @@ export default {
         compras: 0,
         ventas: 0
       }
-      data.disponibles = data.numero - data.num_mortalidad
+      data.disponibles = data.numero - data.num_mortalidad + data.compras
       data.total = data.disponibles - data.ventas
       return data
     },
@@ -620,7 +620,7 @@ export default {
       data.num_descarte = data.numero * (data.rate_descarte.default / 100)
       data.reemplazo = data.num_descarte + data.num_mortalidad
       data.compras = 0
-      data.disponibles = data.numero - data.reemplazo + data.compras
+      data.disponibles = data.numero - data.reemplazo + data.compras + data.compras
       data.ventas = Math.round(data.num_descarte)
       data.total = data.disponibles
       return data
@@ -638,7 +638,7 @@ export default {
       }
       data.rate_mortalidad = Object.assign({}, anteriorMaute.rate_mortalidad)
       data.num_mortalidad = data.numero * (data.rate_mortalidad.default / 100)
-      data.disponibles = data.numero - data.num_mortalidad
+      data.disponibles = data.numero - data.num_mortalidad + data.compras
       data.total = data.disponibles - data.ventas
       return data
     },
@@ -654,7 +654,7 @@ export default {
       }
       data.rate_mortalidad = Object.assign({}, anteriorNovilla.rate_mortalidad)
       data.num_mortalidad = data.numero * (data.rate_mortalidad.default / 100)
-      data.disponibles = data.numero - data.num_mortalidad
+      data.disponibles = data.numero - data.num_mortalidad + data.compras
       data.ventas = Math.round(vacas.total + data.disponibles - 600)
       data.total = data.disponibles - data.ventas
       return data
@@ -671,7 +671,7 @@ export default {
       }
       data.rate_mortalidad = Object.assign({}, anteriorNovillo.rate_mortalidad)
       data.num_mortalidad = data.numero * (data.rate_mortalidad.default / 100)
-      data.disponibles = data.numero - data.num_mortalidad
+      data.disponibles = data.numero - data.num_mortalidad + data.compras
       data.ventas = Math.round(data.disponibles)
       data.total = data.disponibles - data.ventas
       return data
@@ -688,7 +688,7 @@ export default {
       }
       data.rate_mortalidad = Object.assign({}, anteriorTorete.rate_mortalidad)
       data.num_mortalidad = data.numero * (data.rate_mortalidad.default / 100)
-      data.disponibles = data.numero - data.num_mortalidad
+      data.disponibles = data.numero - data.num_mortalidad + data.compras
       data.ventas = Math.round(data.disponibles)
       data.total = data.disponibles - data.ventas
       return data
@@ -723,7 +723,7 @@ export default {
     selectAnimal (key) {
       this.animal_select_value = this.resultados[key]
     },
-    handleChange () {
+    handleChange (event, compraventa = true) {
       this.resultados.vacas.forEach((vaca, index, array) => {
         if (index) {
           vaca.numero =
@@ -735,29 +735,29 @@ export default {
         vaca.num_descarte = vaca.numero * (vaca.rate_descarte.default / 100)
         vaca.reemplazo = vaca.num_descarte + vaca.num_mortalidad
         vaca.disponibles = vaca.numero - vaca.reemplazo + vaca.compras
-        vaca.ventas = Math.round(vaca.num_descarte)
+        if (compraventa) vaca.ventas = Math.round(vaca.num_descarte)
         vaca.total = vaca.disponibles
       })
       this.resultados.becerros.forEach((becerro, index) => {
         becerro.numero = this.resultados.vacas[index].num_partos
         becerro.num_mortalidad =
           becerro.numero * (becerro.rate_mortalidad.default / 100)
-        becerro.disponibles = becerro.numero - becerro.num_mortalidad
+        becerro.disponibles = becerro.numero - becerro.num_mortalidad + becerro.compras
         becerro.total = becerro.disponibles - becerro.ventas
       })
       this.resultados.mautes.forEach((maute, index) => {
         if (index) maute.numero = this.resultados.becerros[index - 1].total
         maute.num_mortalidad =
           maute.numero * (maute.rate_mortalidad.default / 100)
-        maute.disponibles = maute.numero - maute.num_mortalidad
+        maute.disponibles = maute.numero - maute.num_mortalidad + maute.compras
         maute.total = maute.disponibles - maute.ventas
       })
       this.resultados.novillas.forEach((novilla, index) => {
         if (index) novilla.numero = this.resultados.mautes[index - 1].total / 2
         novilla.num_mortalidad =
           novilla.numero * (novilla.rate_mortalidad.default / 100)
-        novilla.disponibles = novilla.numero - novilla.num_mortalidad
-        if (index) {
+        novilla.disponibles = novilla.numero - novilla.num_mortalidad + novilla.compras
+        if (index && compraventa) {
           novilla.ventas =
             Math.round(novilla.disponibles + this.resultados.vacas[index].total - 600)
         }
@@ -767,16 +767,16 @@ export default {
         if (index) novillo.numero = this.resultados.mautes[index - 1].total / 4
         novillo.num_mortalidad =
           novillo.numero * (novillo.rate_mortalidad.default / 100)
-        novillo.disponibles = novillo.numero - novillo.num_mortalidad
-        novillo.ventas = Math.round(novillo.disponibles)
+        novillo.disponibles = novillo.numero - novillo.num_mortalidad + novillo.compras
+        if (compraventa) novillo.ventas = Math.round(novillo.disponibles)
         novillo.total = novillo.disponibles - novillo.ventas
       })
       this.resultados.toretes.forEach((torete, index) => {
         if (index) torete.numero = this.resultados.mautes[index - 1].total / 4
         torete.num_mortalidad =
           torete.numero * (torete.rate_mortalidad.default / 100)
-        torete.disponibles = torete.numero - torete.num_mortalidad
-        torete.ventas = Math.round(torete.disponibles)
+        torete.disponibles = torete.numero - torete.num_mortalidad + torete.compras
+        if (compraventa) torete.ventas = Math.round(torete.disponibles)
         torete.total = torete.disponibles - torete.ventas
       })
       this.resultados.toros.forEach((toro, index, array) => {
@@ -785,9 +785,9 @@ export default {
           toro.numero * (toro.rate_mortalidad.default / 100)
         toro.num_descarte = toro.numero * (toro.rate_descarte.default / 100)
         toro.reemplazo = toro.num_descarte + toro.num_mortalidad
-        toro.compras = Math.round(toro.reemplazo)
+        if (compraventa) toro.compras = Math.round(toro.reemplazo)
         toro.disponibles = toro.numero - toro.reemplazo + toro.compras
-        toro.ventas = Math.round(toro.num_descarte)
+        if (compraventa) toro.ventas = Math.round(toro.num_descarte)
         toro.total = toro.disponibles
       })
       this.selectAnimal(this.animal_select)
