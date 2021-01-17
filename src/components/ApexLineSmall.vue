@@ -72,7 +72,8 @@ export default {
               title: {
                 formatter: () => ''
               }
-            }
+            },
+            theme: this.$q.dark.isActive ? 'dark' : 'light'
           }
         }
       }

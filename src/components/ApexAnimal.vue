@@ -53,8 +53,8 @@ export default {
             enabled: false
           },
           fill: {
-            opacity: [0.25, 0.7, 1, 1, 1, 0.55],
-            type: ['gradient', 'solid', 'pattern', 'solid', 'solid', 'solid'],
+            opacity: [1, 0.5, 1, 1, 1, 0.8],
+            type: ['solid', 'gradient', 'pattern', 'solid', 'solid', 'solid'],
             gradient: {
               shade: 'light',
               type: 'vertical',
@@ -77,7 +77,10 @@ export default {
           title: {
             text: 'Movimiento del rebaño - crecimiento de población',
             align: 'left',
-            offsetX: 30
+            offsetX: 30,
+            style: {
+              color: this.$q.dark.isActive ? '#fff' : '#232323'
+            }
           },
           legend: {
             showForZeroSeries: false,
@@ -86,17 +89,11 @@ export default {
           stroke: {
             show: true,
             curve: 'smooth',
-            width: 2,
-            lineCap: 'round'
-          },
-          plotOptions: {
-            bar: {
-              columnWidth: '25%',
-              barHeight: '100%'
-            }
+            width: [3, 1, 3, 3, 1, 1]
           },
           tooltip: {
             shared: false,
+            theme: this.$q.dark.isActive ? 'dark' : 'light',
             fixed: {
               enabled: true,
               position: 'topLeft', // topRight, topLeft, bottomRight, bottomLeft
@@ -113,27 +110,36 @@ export default {
             }
           },
           xaxis: {
-            categories: this.labels
+            categories: this.labels,
+            labels: {
+              style: {
+                colors: this.$q.dark.isActive ? '#fff' : '#232323'
+              }
+            }
           },
           yaxis: [
             {
               showForNullSeries: false,
+              labels: {
+                style: {
+                  colors: this.$q.dark.isActive ? '#fff' : '#232323'
+                }
+              },
               axisBorder: {
                 show: true,
-                color: '#1342bd',
-                offsetX: 0,
-                offsetY: 0
+                color: '#1342bd'
+              },
+              tooltip: {
+                enabled: true
               },
               axisTicks: {
-                show: true,
-                borderType: 'dotted',
-                color: '#1342bd',
-                width: 10,
-                offsetX: 0,
-                offsetY: 0
+                show: true
               }
             }
-          ]
+          ],
+          theme: {
+            mode: this.$q.dark.isActive ? 'dark' : 'light'
+          }
         }
       }
     }
@@ -170,11 +176,11 @@ export default {
       })
       this.series.push({
         name: 'Inicio',
-        type: 'area',
         data: this.numero
       })
       this.series.push({
         name: 'Partos',
+        type: 'area',
         data: this.partos
       })
       this.series.push({

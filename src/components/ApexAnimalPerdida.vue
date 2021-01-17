@@ -50,7 +50,10 @@ export default {
           title: {
             text: 'Movimiento del rebaño - (Mortalidad, Descarte, Reemplazo)',
             align: 'left',
-            offsetX: 30
+            offsetX: 30,
+            style: {
+              color: this.$q.dark.isActive ? '#fff' : '#232323'
+            }
           },
           legend: {
             showForZeroSeries: false,
@@ -67,10 +70,16 @@ export default {
               position: 'topLeft', // topRight, topLeft, bottomRight, bottomLeft
               offsetY: 30,
               offsetX: 60
-            }
+            },
+            theme: this.$q.dark.isActive ? 'dark' : 'light'
           },
           xaxis: {
-            categories: this.labels
+            categories: this.labels,
+            labels: {
+              style: {
+                colors: this.$q.dark.isActive ? '#fff' : '#232323'
+              }
+            }
           },
           yaxis: [
             {
@@ -126,7 +135,10 @@ export default {
                 }
               }
             }
-          ]
+          ],
+          theme: {
+            mode: this.$q.dark.isActive ? 'dark' : 'light'
+          }
         }
       }
     }

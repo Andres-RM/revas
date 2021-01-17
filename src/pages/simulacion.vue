@@ -45,8 +45,8 @@
         </q-card>
       </div>
       <div class="col-12 col-md-10">
-        <div class="row q-col-gutter-md wrap justify-center full-height">
-          <template v-if="resultados.vacas.length">
+        <div class="row q-col-gutter-md wrap justify-center full-height relative-position">
+          <template v-if="resultados.vacas.length && !load_procesar">
             <div class="col-12 col-sm-6 col-md-9">
               <q-intersection once transition="slide-down">
                 <q-card>
@@ -260,14 +260,17 @@
               </q-intersection>
             </div>
           </template>
-          <div class="col self-center text-center" v-else>
-            <q-spinner-gears size="70px" color="primary"/>
+          <div class="col self-center text-center" v-if="!resultados.vacas.length && !load_procesar">
+            <q-icon name="fas fa-cubes" color="primary" style="font-size: 4.4em;" />
             <p class="text-h5 text-weight-light">Simulador</p>
             <p class="text-subtitle2 text-weight-medium">
               Ingrese los valores iniciales de población animal para ejecutar
               simulacion
             </p>
           </div>
+          <q-inner-loading :showing="load_procesar">
+            <q-spinner-gears size="50px" color="primary" />
+          </q-inner-loading>
         </div>
       </div>
     </div>
@@ -503,27 +506,30 @@ export default {
       ],
       animal_select_value: [],
       tab_anio: 0,
-      anio: 5
+      anio: 5,
+      handleflag: false
     }
   },
   methods: {
     procesar () {
       this.load_procesar = true
-      this.resultados = {
-        becerros: [],
-        mautes: [],
-        novillas: [],
-        novillos: [],
-        toretes: [],
-        toros: [],
-        vacas: [],
-        ua: []
-      }
-      this.primerAnio()
-      this.proyecion()
-      this.animal_select_value = this.resultados[this.animal_select]
-      this.calcularUA()
-      this.load_procesar = false
+      setTimeout(() => {
+        this.resultados = {
+          becerros: [],
+          mautes: [],
+          novillas: [],
+          novillos: [],
+          toretes: [],
+          toros: [],
+          vacas: [],
+          ua: []
+        }
+        this.primerAnio()
+        this.proyecion()
+        this.animal_select_value = this.resultados[this.animal_select]
+        this.calcularUA()
+        this.load_procesar = false
+      }, 500)
     },
     primerAnio () {
       this.animalesInput.forEach(animal => {
@@ -734,74 +740,78 @@ export default {
       this.animal_select_value = this.resultados[key]
     },
     handleChange (event, compraventa = true) {
-      this.resultados.vacas.forEach((vaca, index, array) => {
-        if (index) {
-          vaca.numero =
-            array[index - 1].total + this.resultados.novillas[index - 1].total
-        }
-        vaca.num_partos = vaca.numero * (vaca.rate_partos.default / 100)
-        vaca.num_mortalidad =
-          vaca.numero * (vaca.rate_mortalidad.default / 100)
-        vaca.num_descarte = vaca.numero * (vaca.rate_descarte.default / 100)
-        vaca.reemplazo = vaca.num_descarte + vaca.num_mortalidad
-        vaca.disponibles = vaca.numero - vaca.reemplazo + vaca.compras
-        if (compraventa) vaca.ventas = Math.round(vaca.num_descarte)
-        vaca.total = vaca.disponibles
-      })
-      this.resultados.becerros.forEach((becerro, index) => {
-        becerro.numero = this.resultados.vacas[index].num_partos
-        becerro.num_mortalidad =
-          becerro.numero * (becerro.rate_mortalidad.default / 100)
-        becerro.disponibles = becerro.numero - becerro.num_mortalidad + becerro.compras
-        becerro.total = becerro.disponibles - becerro.ventas
-      })
-      this.resultados.mautes.forEach((maute, index) => {
-        if (index) maute.numero = this.resultados.becerros[index - 1].total
-        maute.num_mortalidad =
-          maute.numero * (maute.rate_mortalidad.default / 100)
-        maute.disponibles = maute.numero - maute.num_mortalidad + maute.compras
-        maute.total = maute.disponibles - maute.ventas
-      })
-      this.resultados.novillas.forEach((novilla, index) => {
-        if (index) novilla.numero = this.resultados.mautes[index - 1].total / 2
-        novilla.num_mortalidad =
-          novilla.numero * (novilla.rate_mortalidad.default / 100)
-        novilla.disponibles = novilla.numero - novilla.num_mortalidad + novilla.compras
-        if (index && compraventa) {
-          novilla.ventas =
-            Math.round(novilla.disponibles + this.resultados.vacas[index].total - 600)
-        }
-        novilla.total = novilla.disponibles - novilla.ventas
-      })
-      this.resultados.novillos.forEach((novillo, index) => {
-        if (index) novillo.numero = this.resultados.mautes[index - 1].total / 4
-        novillo.num_mortalidad =
-          novillo.numero * (novillo.rate_mortalidad.default / 100)
-        novillo.disponibles = novillo.numero - novillo.num_mortalidad + novillo.compras
-        if (compraventa) novillo.ventas = Math.round(novillo.disponibles)
-        novillo.total = novillo.disponibles - novillo.ventas
-      })
-      this.resultados.toretes.forEach((torete, index) => {
-        if (index) torete.numero = this.resultados.mautes[index - 1].total / 4
-        torete.num_mortalidad =
-          torete.numero * (torete.rate_mortalidad.default / 100)
-        torete.disponibles = torete.numero - torete.num_mortalidad + torete.compras
-        if (compraventa) torete.ventas = Math.round(torete.disponibles)
-        torete.total = torete.disponibles - torete.ventas
-      })
-      this.resultados.toros.forEach((toro, index, array) => {
-        if (index) toro.numero = array[index - 1].total
-        toro.num_mortalidad =
-          toro.numero * (toro.rate_mortalidad.default / 100)
-        toro.num_descarte = toro.numero * (toro.rate_descarte.default / 100)
-        toro.reemplazo = toro.num_descarte + toro.num_mortalidad
-        if (compraventa) toro.compras = Math.round(toro.reemplazo)
-        toro.disponibles = toro.numero - toro.reemplazo + toro.compras
-        if (compraventa) toro.ventas = Math.round(toro.num_descarte)
-        toro.total = toro.disponibles
-      })
-      this.selectAnimal(this.animal_select)
-      this.calcularUA()
+      if (!this.handleflag) {
+        this.handleflag = true
+        this.resultados.vacas.forEach((vaca, index, array) => {
+          if (index) {
+            vaca.numero =
+              array[index - 1].total + this.resultados.novillas[index - 1].total
+          }
+          vaca.num_partos = vaca.numero * (vaca.rate_partos.default / 100)
+          vaca.num_mortalidad =
+            vaca.numero * (vaca.rate_mortalidad.default / 100)
+          vaca.num_descarte = vaca.numero * (vaca.rate_descarte.default / 100)
+          vaca.reemplazo = vaca.num_descarte + vaca.num_mortalidad
+          vaca.disponibles = vaca.numero - vaca.reemplazo + vaca.compras
+          if (compraventa) vaca.ventas = Math.round(vaca.num_descarte)
+          vaca.total = vaca.disponibles
+        })
+        this.resultados.becerros.forEach((becerro, index) => {
+          becerro.numero = this.resultados.vacas[index].num_partos
+          becerro.num_mortalidad =
+            becerro.numero * (becerro.rate_mortalidad.default / 100)
+          becerro.disponibles = becerro.numero - becerro.num_mortalidad + becerro.compras
+          becerro.total = becerro.disponibles - becerro.ventas
+        })
+        this.resultados.mautes.forEach((maute, index) => {
+          if (index) maute.numero = this.resultados.becerros[index - 1].total
+          maute.num_mortalidad =
+            maute.numero * (maute.rate_mortalidad.default / 100)
+          maute.disponibles = maute.numero - maute.num_mortalidad + maute.compras
+          maute.total = maute.disponibles - maute.ventas
+        })
+        this.resultados.novillas.forEach((novilla, index) => {
+          if (index) novilla.numero = this.resultados.mautes[index - 1].total / 2
+          novilla.num_mortalidad =
+            novilla.numero * (novilla.rate_mortalidad.default / 100)
+          novilla.disponibles = novilla.numero - novilla.num_mortalidad + novilla.compras
+          if (index && compraventa) {
+            novilla.ventas =
+              Math.round(novilla.disponibles + this.resultados.vacas[index].total - 600)
+          }
+          novilla.total = novilla.disponibles - novilla.ventas
+        })
+        this.resultados.novillos.forEach((novillo, index) => {
+          if (index) novillo.numero = this.resultados.mautes[index - 1].total / 4
+          novillo.num_mortalidad =
+            novillo.numero * (novillo.rate_mortalidad.default / 100)
+          novillo.disponibles = novillo.numero - novillo.num_mortalidad + novillo.compras
+          if (compraventa) novillo.ventas = Math.round(novillo.disponibles)
+          novillo.total = novillo.disponibles - novillo.ventas
+        })
+        this.resultados.toretes.forEach((torete, index) => {
+          if (index) torete.numero = this.resultados.mautes[index - 1].total / 4
+          torete.num_mortalidad =
+            torete.numero * (torete.rate_mortalidad.default / 100)
+          torete.disponibles = torete.numero - torete.num_mortalidad + torete.compras
+          if (compraventa) torete.ventas = Math.round(torete.disponibles)
+          torete.total = torete.disponibles - torete.ventas
+        })
+        this.resultados.toros.forEach((toro, index, array) => {
+          if (index) toro.numero = array[index - 1].total
+          toro.num_mortalidad =
+            toro.numero * (toro.rate_mortalidad.default / 100)
+          toro.num_descarte = toro.numero * (toro.rate_descarte.default / 100)
+          toro.reemplazo = toro.num_descarte + toro.num_mortalidad
+          if (compraventa) toro.compras = Math.round(toro.reemplazo)
+          toro.disponibles = toro.numero - toro.reemplazo + toro.compras
+          if (compraventa) toro.ventas = Math.round(toro.num_descarte)
+          toro.total = toro.disponibles
+        })
+        this.selectAnimal(this.animal_select)
+        this.calcularUA()
+        this.handleflag = false
+      }
     }
   }
 }
