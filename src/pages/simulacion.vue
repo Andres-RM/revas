@@ -4,9 +4,9 @@
       <div class="col-12 col-md-2">
         <q-card>
           <q-card-section>
-            <div class="text-subtitle1">Valores iniciales</div>
+            <div class="text-subtitle1">Población Inicial</div>
           </q-card-section>
-          <q-separator/>
+          <q-separator />
           <q-card-section>
             <q-form @submit="procesar">
               <q-input
@@ -19,17 +19,17 @@
                 :label="animal.label"
                 v-model.number="animal.value"
                 lazy-rules
-                :rules="[val => val !== null && val !== '' || 'Requerido']"
+                :rules="[val => (val !== null && val !== '') || 'Requerido']"
               />
               <q-select
                 v-model="anio"
-                :options="[5,6,7,8,9,10]"
+                :options="[5, 6, 7, 8, 9, 10]"
                 dense
                 color="secondary"
                 filled
                 label="Años proyectados"
                 lazy-rules
-                :rules="[val => val !== null && val !== '' || 'Requerido']"
+                :rules="[val => (val !== null && val !== '') || 'Requerido']"
               />
               <q-btn
                 type="submit"
@@ -38,13 +38,14 @@
                 dense
                 no-caps
                 :loading="load_procesar"
-                no-wrap/>
+                no-wrap
+              />
             </q-form>
           </q-card-section>
         </q-card>
       </div>
       <div class="col-12 col-md-10">
-        <div class="row q-col-gutter-sm wrap">
+        <div class="row q-col-gutter-sm wrap justify-center full-height">
           <template v-if="resultados.vacas.length">
             <div class="col-12">
               <q-card>
@@ -52,8 +53,8 @@
                   <div class="text-subtitle1 q-mb-sm">
                     Proyección por animal
                   </div>
-                  <div class="row wrap">
-                    <div class="col col-sm-8 col-md-3">
+                  <div class="row wrap q-col-gutter-sm">
+                    <div class="col col-sm-4 col-md-3">
                       <q-select
                         @input="selectAnimal"
                         v-model="animal_select"
@@ -64,105 +65,183 @@
                         dense
                         outlined
                         option-label="label"
-                        label="Animal"/>
+                        label="Animal"
+                      />
+                    </div>
+                    <div class="col">
+                      <q-tabs
+                        v-model="tab_anio"
+                        class="text-teal"
+                        stretch
+                        align="left"
+                      >
+                        <q-tab
+                          v-for="(anio, index) of resultados[animal_select]"
+                          :key="index"
+                          :name="index"
+                          :label="index + 1 + 'º año'"
+                        />
+                      </q-tabs>
                     </div>
                   </div>
+                  <q-tab-panels v-model="tab_anio" animated keep-alive swipeable>
+                    <q-tab-panel
+                      v-for="(anio, index) of resultados[animal_select]"
+                      :key="index"
+                      :name="index"
+                    >
+                      <div class="row wrap q-col-gutter-sm">
+                        <div class="col-12 col-sm-6 col-md-4">
+                          <p>
+                            Cantidad inicial:
+                            <span class="text-weight-medium">{{
+                                Math.round(anio.numero)
+                              }}</span>
+                          </p>
+                          <template v-if="anio.rate_partos">
+                            <div
+                              class="row q-gutter-md items-center content-center"
+                            >
+                              <p>Partos (%):</p>
+                              <div class="col">
+                                <q-slider
+                                  v-model="anio.rate_partos.default"
+                                  :min="anio.rate_partos.min"
+                                  :max="anio.rate_partos.max"
+                                  snap
+                                  label
+                                  label-always
+                                  @change="handleChange"
+                                  :label-value="anio.rate_partos.default + '%'"
+                                  :step="anio.rate_partos.step"
+                                />
+                              </div>
+                            </div>
+                            <p>
+                              Partos (nº):
+                              <span class="text-weight-medium">{{
+                                  Math.round(anio.num_partos)
+                                }}</span>
+                            </p>
+                          </template>
+                          <template v-if="anio.rate_mortalidad">
+                            <div
+                              class="row q-gutter-md items-center content-center"
+                            >
+                              <p>Mortalidad (%):</p>
+                              <div class="col">
+                                <q-slider
+                                  v-model="anio.rate_mortalidad.default"
+                                  :min="anio.rate_mortalidad.min"
+                                  :max="anio.rate_mortalidad.max"
+                                  snap
+                                  label
+                                  label-always
+                                  @change="handleChange"
+                                  :label-value="
+                                  anio.rate_mortalidad.default + '%'
+                                "
+                                  :step="anio.rate_mortalidad.step"
+                                />
+                              </div>
+                            </div>
+                            <p>
+                              Mortalidad (nº):
+                              <span class="text-weight-medium">{{
+                                  Math.round(anio.num_mortalidad)
+                                }}</span>
+                            </p>
+                          </template>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4">
+                          <template v-if="anio.rate_descarte">
+                            <div
+                              class="row q-gutter-md items-center content-center"
+                            >
+                              <p>Descarte (%):</p>
+                              <div class="col">
+                                <q-slider
+                                  v-model="anio.rate_descarte.default"
+                                  :min="anio.rate_descarte.min"
+                                  :max="anio.rate_descarte.max"
+                                  snap
+                                  label
+                                  label-always
+                                  @change="handleChange"
+                                  :label-value="anio.rate_descarte.default + '%'"
+                                  :step="anio.rate_descarte.step"
+                                />
+                              </div>
+                            </div>
+                            <p>
+                              Descarte (nº):
+                              <span class="text-weight-medium">{{
+                                  Math.round(anio.num_descarte)
+                                }}</span>
+                            </p>
+                          </template>
+                          <p>
+                            Reemplazo (n):
+                            <span class="text-weight-medium">{{
+                                Math.round(anio.reemplazo)
+                              }}</span>
+                          </p>
+                          <p>
+                            Compras (n):
+                            <span class="text-weight-medium">{{
+                                Math.round(anio.compras)
+                              }}</span>
+                          </p>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4">
+                          <p>
+                            Disponibles (n):
+                            <span class="text-weight-medium">{{
+                                Math.round(anio.disponibles)
+                              }}</span>
+                          </p>
+                          <p>
+                            Ventas (n):
+                            <span class="text-weight-medium">{{
+                                Math.round(anio.ventas)
+                              }}</span>
+                          </p>
+                          <p class="text-body1">
+                            Total (n):
+                            <span class="text-weight-medium">
+                            {{ Math.round(anio.total) }}
+                          </span>
+                          </p>
+                        </div>
+                      </div>
+                    </q-tab-panel>
+                  </q-tab-panels>
                 </q-card-section>
-                <q-separator/>
-                <q-tabs v-model="tab_anio" class="text-teal" stretch align="left">
-                  <q-tab v-for="(anio, index) of resultados[animal_select]"
-                         :key="index"
-                         :name="index"
-                         :label="index + 1 + 'º año'"/>
-                </q-tabs>
-                <q-separator/>
-                <q-tab-panels v-model="tab_anio" animated keep-alive swipeable>
-                  <q-tab-panel v-for="(anio, index) of resultados[animal_select]"
-                               :key="index"
-                               :name="index">
-                    <div class="row wrap q-col-gutter-sm">
-                      <div class="col-12 col-sm-6 col-md-4">
-                        <p>Cantidad inicial: <span class="text-weight-medium">{{ Math.round(anio.numero) }}</span></p>
-                        <template v-if="anio.rate_partos">
-                          <div class="row q-gutter-md items-center content-center">
-                            <p>Partos (%): </p>
-                            <div class="col">
-                              <q-slider v-model="anio.rate_partos.default"
-                                        :min="anio.rate_partos.min"
-                                        :max="anio.rate_partos.max"
-                                        snap
-                                        label
-                                        label-always
-                                        @change="handleChange"
-                                        :label-value="anio.rate_partos.default + '%'"
-                                        :step="anio.rate_partos.step"/>
-                            </div>
-                          </div>
-                          <p>Partos (nº): <span class="text-weight-medium">{{ Math.round(anio.num_partos) }}</span></p>
-                        </template>
-                        <template v-if="anio.rate_mortalidad">
-                          <div class="row q-gutter-md items-center content-center">
-                            <p>Mortalidad (%): </p>
-                            <div class="col">
-                              <q-slider v-model="anio.rate_mortalidad.default"
-                                        :min="anio.rate_mortalidad.min"
-                                        :max="anio.rate_mortalidad.max"
-                                        snap
-                                        label
-                                        label-always
-                                        @change="handleChange"
-                                        :label-value="anio.rate_mortalidad.default + '%'"
-                                        :step="anio.rate_mortalidad.step"/>
-                            </div>
-                          </div>
-                          <p>Mortalidad (nº): <span class="text-weight-medium">{{ Math.round(anio.num_mortalidad) }}</span>
-                          </p>
-                        </template>
-                      </div>
-                      <div class="col-12 col-sm-6 col-md-4">
-                        <template v-if="anio.rate_descarte">
-                          <div class="row q-gutter-md items-center content-center">
-                            <p>Descarte (%): </p>
-                            <div class="col">
-                              <q-slider v-model="anio.rate_descarte.default"
-                                        :min="anio.rate_descarte.min"
-                                        :max="anio.rate_descarte.max"
-                                        snap
-                                        label
-                                        label-always
-                                        @change="handleChange"
-                                        :label-value="anio.rate_descarte.default + '%'"
-                                        :step="anio.rate_descarte.step"/>
-                            </div>
-                          </div>
-                          <p>Descarte (nº): <span class="text-weight-medium">{{ Math.round(anio.num_descarte) }}</span>
-                          </p>
-                        </template>
-                        <p>Reemplazo (n): <span class="text-weight-medium">{{ Math.round(anio.reemplazo) }}</span></p>
-                        <p>Compras (n): <span class="text-weight-medium">{{ Math.round(anio.compras) }}</span></p>
-                      </div>
-                      <div class="col-12 col-sm-6 col-md-4">
-                        <p>Disponibles (n): <span class="text-weight-medium">{{ Math.round(anio.disponibles) }}</span></p>
-                        <p>Ventas (n): <span class="text-weight-medium">{{ Math.round(anio.ventas) }}</span></p>
-                        <p class="text-body1">
-                          Total (n):
-                          <span class="text-weight-medium">
-                        {{ Math.round(anio.total) }}
-                      </span></p>
-                      </div>
-                    </div>
-                  </q-tab-panel>
-                </q-tab-panels>
               </q-card>
             </div>
             <div class="col-12 col-md-6">
               <q-card>
                 <q-card-section>
-                  <apex-animal :animaldata="animal_select_value"/>
+                  <apex-animal :animaldata="animal_select_value" />
+                </q-card-section>
+              </q-card>
+            </div>
+            <div class="col-12 col-md-6">
+              <q-card>
+                <q-card-section>
+                  <apex-animal-perdida :animaldata="animal_select_value"/>
                 </q-card-section>
               </q-card>
             </div>
           </template>
+          <div class="col self-center text-center" v-else>
+            <q-spinner-gears  size="70px" color="primary" />
+            <p class="text-h5 text-weight-light">Simulador</p>
+            <p class="text-subtitle2 text-weight-medium">
+              Ingrese los valores iniciales de población animal para ejecutar
+              simulacion
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -176,7 +255,7 @@ export default {
     return {
       animalesInput: [
         {
-          value: 480,
+          value: null,
           label: 'Vacas',
           key: 'vacas',
           rate_partos: {
@@ -197,21 +276,21 @@ export default {
             default: 18,
             step: 1
           },
-          calcularReemplazo: (data) => {
+          calcularReemplazo: data => {
             return data.num_descarte + data.num_mortalidad
           },
-          calcularDisponibilidad: (data) => {
+          calcularDisponibilidad: data => {
             return data.numero - data.reemplazo + data.compras
           },
-          calcularVentas: (data) => {
+          calcularVentas: data => {
             return data.reemplazo
           },
-          calcularTotal: (data) => {
+          calcularTotal: data => {
             return data.disponibles
           }
         },
         {
-          value: 340,
+          value: null,
           label: 'Mautes(as)',
           key: 'mautes',
           rate_mortalidad: {
@@ -220,15 +299,15 @@ export default {
             default: 4,
             step: 0.5
           },
-          calcularDisponibilidad: (data) => {
+          calcularDisponibilidad: data => {
             return data.numero - data.num_mortalidad
           },
-          calcularTotal: (data) => {
+          calcularTotal: data => {
             return data.disponibles - data.ventas
           }
         },
         {
-          value: 180,
+          value: null,
           label: 'Novillas',
           key: 'novillas',
           rate_mortalidad: {
@@ -237,15 +316,15 @@ export default {
             default: 2,
             step: 0.1
           },
-          calcularDisponibilidad: (data) => {
+          calcularDisponibilidad: data => {
             return data.numero - data.num_mortalidad
           },
-          calcularTotal: (data) => {
+          calcularTotal: data => {
             return data.disponibles - data.ventas
           }
         },
         {
-          value: 90,
+          value: null,
           label: 'Novillos',
           key: 'novillos',
           rate_mortalidad: {
@@ -254,18 +333,18 @@ export default {
             default: 2,
             step: 0.1
           },
-          calcularDisponibilidad: (data) => {
+          calcularDisponibilidad: data => {
             return data.numero - data.num_mortalidad
           },
-          calcularTotal: (data) => {
+          calcularTotal: data => {
             return data.disponibles - data.ventas
           },
-          calcularVentas: (data) => {
+          calcularVentas: data => {
             return data.disponibles
           }
         },
         {
-          value: 90,
+          value: null,
           label: 'Toretes',
           key: 'toretes',
           rate_mortalidad: {
@@ -274,18 +353,18 @@ export default {
             default: 2,
             step: 0.1
           },
-          calcularDisponibilidad: (data) => {
+          calcularDisponibilidad: data => {
             return data.numero - data.num_mortalidad
           },
-          calcularTotal: (data) => {
+          calcularTotal: data => {
             return data.disponibles - data.ventas
           },
-          calcularVentas: (data) => {
+          calcularVentas: data => {
             return data.disponibles
           }
         },
         {
-          value: 30,
+          value: null,
           label: 'Toros',
           key: 'toros',
           rate_mortalidad: {
@@ -300,16 +379,16 @@ export default {
             default: 35,
             step: 1
           },
-          calcularReemplazo: (data) => {
+          calcularReemplazo: data => {
             return data.num_descarte + data.num_mortalidad
           },
-          calcularDisponibilidad: (data) => {
+          calcularDisponibilidad: data => {
             return data.numero - data.reemplazo + data.compras
           },
-          calcularVentas: (data) => {
+          calcularVentas: data => {
             return data.reemplazo
           },
-          calcularTotal: (data) => {
+          calcularTotal: data => {
             return data.disponibles
           }
         }
@@ -378,17 +457,31 @@ export default {
       this.load_procesar = false
     },
     primerAnio () {
-      this.animalesInput.forEach((animal) => {
+      this.animalesInput.forEach(animal => {
         const data = {
           numero: animal.value,
-          rate_partos: animal.rate_partos ? Object.assign({}, animal.rate_partos) : null,
-          num_partos: animal.rate_partos ? animal.value * (animal.rate_partos.default / 100) : 0,
-          rate_mortalidad: animal.rate_mortalidad ? Object.assign({}, animal.rate_mortalidad) : null,
-          num_mortalidad: animal.rate_mortalidad ? animal.value * (animal.rate_mortalidad.default / 100) : 0,
-          rate_descarte: animal.rate_descarte ? Object.assign({}, animal.rate_descarte) : null,
-          num_descarte: animal.rate_descarte ? animal.value * (animal.rate_descarte.default / 100) : 0
+          rate_partos: animal.rate_partos
+            ? Object.assign({}, animal.rate_partos)
+            : null,
+          num_partos: animal.rate_partos
+            ? animal.value * (animal.rate_partos.default / 100)
+            : 0,
+          rate_mortalidad: animal.rate_mortalidad
+            ? Object.assign({}, animal.rate_mortalidad)
+            : null,
+          num_mortalidad: animal.rate_mortalidad
+            ? animal.value * (animal.rate_mortalidad.default / 100)
+            : 0,
+          rate_descarte: animal.rate_descarte
+            ? Object.assign({}, animal.rate_descarte)
+            : null,
+          num_descarte: animal.rate_descarte
+            ? animal.value * (animal.rate_descarte.default / 100)
+            : 0
         }
-        data.reemplazo = animal.calcularReemplazo ? animal.calcularReemplazo(data) : 0
+        data.reemplazo = animal.calcularReemplazo
+          ? animal.calcularReemplazo(data)
+          : 0
         data.compras = 0
         data.disponibles = animal.calcularDisponibilidad(data)
         data.ventas = animal.calcularVentas ? animal.calcularVentas(data) : 0
@@ -403,17 +496,33 @@ export default {
     proyecion () {
       if (!this.resultados.vacas.length) this.primerAnio()
       for (let i = 0; i < this.anio - 1; i++) {
-        const vaca = this.procesarVaca(this.resultados.vacas[i], this.resultados.novillas[i])
+        const vaca = this.procesarVaca(
+          this.resultados.vacas[i],
+          this.resultados.novillas[i]
+        )
         this.resultados.vacas.push(vaca)
         const becerro = this.procesarBecerro(vaca)
         this.resultados.becerros.push(becerro)
-        const maute = this.procesarMaute(this.resultados.becerros[i], this.resultados.mautes[i])
+        const maute = this.procesarMaute(
+          this.resultados.becerros[i],
+          this.resultados.mautes[i]
+        )
         this.resultados.mautes.push(maute)
-        const novilla = this.procesarNovillas(this.resultados.mautes[i], this.resultados.novillas[i], vaca)
+        const novilla = this.procesarNovillas(
+          this.resultados.mautes[i],
+          this.resultados.novillas[i],
+          vaca
+        )
         this.resultados.novillas.push(novilla)
-        const novillo = this.procesarNovillos(this.resultados.mautes[i], this.resultados.novillos[i])
+        const novillo = this.procesarNovillos(
+          this.resultados.mautes[i],
+          this.resultados.novillos[i]
+        )
         this.resultados.novillos.push(novillo)
-        const toretes = this.procesarToretes(this.resultados.mautes[i], this.resultados.toretes[i])
+        const toretes = this.procesarToretes(
+          this.resultados.mautes[i],
+          this.resultados.toretes[i]
+        )
         this.resultados.toretes.push(toretes)
         const toro = this.procesarToro(this.resultados.toros[i])
         this.resultados.toros.push(toro)
@@ -547,9 +656,13 @@ export default {
     },
     handleChange () {
       this.resultados.vacas.forEach((vaca, index, array) => {
-        if (index) vaca.numero = array[index - 1].total + this.resultados.novillas[index - 1].total
+        if (index) {
+          vaca.numero =
+            array[index - 1].total + this.resultados.novillas[index - 1].total
+        }
         vaca.num_partos = vaca.numero * (vaca.rate_partos.default / 100)
-        vaca.num_mortalidad = vaca.numero * (vaca.rate_mortalidad.default / 100)
+        vaca.num_mortalidad =
+          vaca.numero * (vaca.rate_mortalidad.default / 100)
         vaca.num_descarte = vaca.numero * (vaca.rate_descarte.default / 100)
         vaca.reemplazo = vaca.num_descarte + vaca.num_mortalidad
         vaca.disponibles = vaca.numero - vaca.reemplazo + vaca.compras
@@ -558,40 +671,49 @@ export default {
       })
       this.resultados.becerros.forEach((becerro, index) => {
         becerro.numero = this.resultados.vacas[index].num_partos
-        becerro.num_mortalidad = becerro.numero * (becerro.rate_mortalidad.default / 100)
+        becerro.num_mortalidad =
+          becerro.numero * (becerro.rate_mortalidad.default / 100)
         becerro.disponibles = becerro.numero - becerro.num_mortalidad
         becerro.total = becerro.disponibles - becerro.ventas
       })
       this.resultados.mautes.forEach((maute, index) => {
         if (index) maute.numero = this.resultados.becerros[index - 1].total
-        maute.num_mortalidad = maute.numero * (maute.rate_mortalidad.default / 100)
+        maute.num_mortalidad =
+          maute.numero * (maute.rate_mortalidad.default / 100)
         maute.disponibles = maute.numero - maute.num_mortalidad
         maute.total = maute.disponibles - maute.ventas
       })
       this.resultados.novillas.forEach((novilla, index) => {
         if (index) novilla.numero = this.resultados.mautes[index - 1].total / 2
-        novilla.num_mortalidad = novilla.numero * (novilla.rate_mortalidad.default / 100)
+        novilla.num_mortalidad =
+          novilla.numero * (novilla.rate_mortalidad.default / 100)
         novilla.disponibles = novilla.numero - novilla.num_mortalidad
-        if (index) novilla.ventas = novilla.disponibles + this.resultados.vacas[index].total - 600
+        if (index) {
+          novilla.ventas =
+            novilla.disponibles + this.resultados.vacas[index].total - 600
+        }
         novilla.total = novilla.disponibles - novilla.ventas
       })
       this.resultados.novillos.forEach((novillo, index) => {
         if (index) novillo.numero = this.resultados.mautes[index - 1].total / 4
-        novillo.num_mortalidad = novillo.numero * (novillo.rate_mortalidad.default / 100)
+        novillo.num_mortalidad =
+          novillo.numero * (novillo.rate_mortalidad.default / 100)
         novillo.disponibles = novillo.numero - novillo.num_mortalidad
         novillo.ventas = novillo.disponibles
         novillo.total = novillo.disponibles - novillo.ventas
       })
       this.resultados.toretes.forEach((torete, index) => {
         if (index) torete.numero = this.resultados.mautes[index - 1].total / 4
-        torete.num_mortalidad = torete.numero * (torete.rate_mortalidad.default / 100)
+        torete.num_mortalidad =
+          torete.numero * (torete.rate_mortalidad.default / 100)
         torete.disponibles = torete.numero - torete.num_mortalidad
         torete.ventas = torete.disponibles
         torete.total = torete.disponibles - torete.ventas
       })
       this.resultados.toros.forEach((toro, index, array) => {
         if (index) toro.numero = array[index - 1].total
-        toro.num_mortalidad = toro.numero * (toro.rate_mortalidad.default / 100)
+        toro.num_mortalidad =
+          toro.numero * (toro.rate_mortalidad.default / 100)
         toro.num_descarte = toro.numero * (toro.rate_descarte.default / 100)
         toro.reemplazo = toro.num_descarte + toro.num_mortalidad
         toro.disponibles = toro.numero - toro.reemplazo + toro.compras

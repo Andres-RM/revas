@@ -1,9 +1,7 @@
 <template>
   <apexchart type="line" :options="options" :series="series" ref="chart"/>
 </template>
-
 <script>
-
 export default {
   name: 'ApexAnimal',
   props: {
@@ -19,9 +17,6 @@ export default {
       partos: [],
       series: [],
       labels: [],
-      mortalidad: [],
-      descarte: [],
-      reemplazo: [],
       compras: [],
       disponibles: [],
       ventas: []
@@ -80,7 +75,7 @@ export default {
             size: 4
           },
           title: {
-            text: 'Movimiento del rebaño - población',
+            text: 'Movimiento del rebaño - crecimiento de población',
             align: 'left',
             offsetX: 30
           },
@@ -160,9 +155,6 @@ export default {
       this.numero = []
       this.total = []
       this.labels = []
-      this.mortalidad = []
-      this.descarte = []
-      this.reemplazo = []
       this.compras = []
       this.disponibles = []
       this.ventas = []
@@ -171,9 +163,6 @@ export default {
         this.labels.push(index + 1 + 'º año')
         this.numero.push(Math.round(animal.numero))
         this.partos.push(Math.round(animal.num_partos))
-        this.mortalidad.push(Math.round(animal.num_mortalidad))
-        this.descarte.push(Math.round(animal.num_descarte))
-        this.reemplazo.push(Math.round(animal.reemplazo))
         this.compras.push(Math.round(animal.compras))
         this.disponibles.push(Math.round(animal.disponibles))
         this.ventas.push(Math.round(animal.ventas))
