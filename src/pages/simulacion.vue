@@ -6,7 +6,7 @@
           <q-card-section>
             <div class="text-subtitle1">Población Inicial</div>
           </q-card-section>
-          <q-separator />
+          <q-separator/>
           <q-card-section>
             <q-form @submit="procesar">
               <q-input
@@ -45,197 +45,213 @@
         </q-card>
       </div>
       <div class="col-12 col-md-10">
-        <div class="row q-col-gutter-sm wrap justify-center full-height">
+        <div class="row q-col-gutter-md wrap justify-center full-height">
           <template v-if="resultados.vacas.length">
-            <div class="col-12">
-              <q-card>
-                <q-card-section>
-                  <div class="text-subtitle1 q-mb-sm">
-                    Proyección por animal
-                  </div>
-                  <div class="row wrap q-col-gutter-sm">
-                    <div class="col col-sm-4 col-md-3">
-                      <q-select
-                        @input="selectAnimal"
-                        v-model="animal_select"
-                        :options="selectOption"
-                        option-value="key"
-                        emit-value
-                        map-options
-                        dense
-                        outlined
-                        option-label="label"
-                        label="Animal"
-                      />
+            <div class="col-12 col-sm-6 col-md-9">
+              <q-intersection once transition="slide-down">
+                <q-card>
+                  <q-card-section>
+                    <div class="text-subtitle1 q-mb-sm">
+                      Proyección por animal
                     </div>
-                    <div class="col">
-                      <q-tabs
-                        v-model="tab_anio"
-                        class="text-teal"
-                        stretch
-                        align="left"
-                      >
-                        <q-tab
-                          v-for="(anio, index) of resultados[animal_select]"
-                          :key="index"
-                          :name="index"
-                          :label="index + 1 + 'º año'"
+                    <div class="row wrap q-col-gutter-sm">
+                      <div class="col col-sm-4 col-md-3">
+                        <q-select
+                          @input="selectAnimal"
+                          v-model="animal_select"
+                          :options="selectOption"
+                          option-value="key"
+                          emit-value
+                          map-options
+                          dense
+                          outlined
+                          option-label="label"
+                          label="Animal"
                         />
-                      </q-tabs>
+                      </div>
+                      <div class="col">
+                        <q-tabs
+                          v-model="tab_anio"
+                          class="text-teal"
+                          stretch
+                          align="left"
+                        >
+                          <q-tab
+                            v-for="(anio, index) of resultados[animal_select]"
+                            :key="index"
+                            :name="index"
+                            :label="index + 1 + 'º año'"
+                          />
+                        </q-tabs>
+                      </div>
                     </div>
-                  </div>
-                  <q-tab-panels v-model="tab_anio" animated keep-alive swipeable>
-                    <q-tab-panel
-                      v-for="(anio, index) of resultados[animal_select]"
-                      :key="index"
-                      :name="index"
-                    >
-                      <div class="row wrap q-col-gutter-sm">
-                        <div class="col-12 col-sm-6 col-md-4">
-                          <p>
-                            Cantidad inicial:
-                            <span class="text-weight-medium">{{
-                                Math.round(anio.numero)
-                              }}</span>
-                          </p>
-                          <template v-if="anio.rate_partos">
-                            <div
-                              class="row q-gutter-md items-center content-center"
-                            >
-                              <p>Partos (%):</p>
-                              <div class="col">
-                                <q-slider
-                                  v-model="anio.rate_partos.default"
-                                  :min="anio.rate_partos.min"
-                                  :max="anio.rate_partos.max"
-                                  snap
-                                  label
-                                  label-always
-                                  @change="handleChange"
-                                  :label-value="anio.rate_partos.default + '%'"
-                                  :step="anio.rate_partos.step"
-                                />
-                              </div>
-                            </div>
+                    <q-tab-panels v-model="tab_anio" animated keep-alive swipeable>
+                      <q-tab-panel
+                        v-for="(anio, index) of resultados[animal_select]"
+                        :key="index"
+                        :name="index"
+                      >
+                        <div class="row wrap q-col-gutter-md">
+                          <div class="col-12 col-md-4">
                             <p>
-                              Partos (nº):
+                              Cantidad inicial:
                               <span class="text-weight-medium">{{
-                                  Math.round(anio.num_partos)
+                                  Math.round(anio.numero)
                                 }}</span>
                             </p>
-                          </template>
-                          <template v-if="anio.rate_mortalidad">
-                            <div
-                              class="row q-gutter-md items-center content-center"
-                            >
-                              <p>Mortalidad (%):</p>
-                              <div class="col">
-                                <q-slider
-                                  v-model="anio.rate_mortalidad.default"
-                                  :min="anio.rate_mortalidad.min"
-                                  :max="anio.rate_mortalidad.max"
-                                  snap
-                                  label
-                                  label-always
-                                  @change="handleChange"
-                                  :label-value="
+                            <template v-if="anio.rate_partos">
+                              <div
+                                class="row q-gutter-md items-center content-center"
+                              >
+                                <p>Partos (%):</p>
+                                <div class="col">
+                                  <q-slider
+                                    v-model="anio.rate_partos.default"
+                                    :min="anio.rate_partos.min"
+                                    :max="anio.rate_partos.max"
+                                    snap
+                                    label
+                                    label-always
+                                    @change="handleChange"
+                                    :label-value="anio.rate_partos.default + '%'"
+                                    :step="anio.rate_partos.step"
+                                  />
+                                </div>
+                              </div>
+                              <p>
+                                Partos (nº):
+                                <span class="text-weight-medium">{{
+                                    Math.round(anio.num_partos)
+                                  }}</span>
+                              </p>
+                            </template>
+                            <template v-if="anio.rate_mortalidad">
+                              <div
+                                class="row q-gutter-md items-center content-center"
+                              >
+                                <p>Mortalidad (%):</p>
+                                <div class="col">
+                                  <q-slider
+                                    v-model="anio.rate_mortalidad.default"
+                                    :min="anio.rate_mortalidad.min"
+                                    :max="anio.rate_mortalidad.max"
+                                    snap
+                                    label
+                                    label-always
+                                    @change="handleChange"
+                                    :label-value="
                                   anio.rate_mortalidad.default + '%'
                                 "
-                                  :step="anio.rate_mortalidad.step"
-                                />
+                                    :step="anio.rate_mortalidad.step"
+                                  />
+                                </div>
                               </div>
-                            </div>
+                              <p>
+                                Mortalidad (nº):
+                                <span class="text-weight-medium">{{
+                                    Math.round(anio.num_mortalidad)
+                                  }}</span>
+                              </p>
+                            </template>
+                          </div>
+                          <div class="col-12 col-md-4">
+                            <template v-if="anio.rate_descarte">
+                              <div
+                                class="row q-gutter-md items-center content-center"
+                              >
+                                <p>Descarte (%):</p>
+                                <div class="col">
+                                  <q-slider
+                                    v-model="anio.rate_descarte.default"
+                                    :min="anio.rate_descarte.min"
+                                    :max="anio.rate_descarte.max"
+                                    snap
+                                    label
+                                    label-always
+                                    @change="handleChange"
+                                    :label-value="anio.rate_descarte.default + '%'"
+                                    :step="anio.rate_descarte.step"
+                                  />
+                                </div>
+                              </div>
+                              <p>
+                                Descarte (nº):
+                                <span class="text-weight-medium">{{
+                                    Math.round(anio.num_descarte)
+                                  }}</span>
+                              </p>
+                            </template>
                             <p>
-                              Mortalidad (nº):
+                              Reemplazo (n):
                               <span class="text-weight-medium">{{
-                                  Math.round(anio.num_mortalidad)
+                                  Math.round(anio.reemplazo)
                                 }}</span>
                             </p>
-                          </template>
-                        </div>
-                        <div class="col-12 col-sm-6 col-md-4">
-                          <template v-if="anio.rate_descarte">
-                            <div
-                              class="row q-gutter-md items-center content-center"
-                            >
-                              <p>Descarte (%):</p>
-                              <div class="col">
-                                <q-slider
-                                  v-model="anio.rate_descarte.default"
-                                  :min="anio.rate_descarte.min"
-                                  :max="anio.rate_descarte.max"
-                                  snap
-                                  label
-                                  label-always
-                                  @change="handleChange"
-                                  :label-value="anio.rate_descarte.default + '%'"
-                                  :step="anio.rate_descarte.step"
-                                />
-                              </div>
-                            </div>
                             <p>
-                              Descarte (nº):
+                              Compras (n):
                               <span class="text-weight-medium">{{
-                                  Math.round(anio.num_descarte)
+                                  Math.round(anio.compras)
                                 }}</span>
                             </p>
-                          </template>
-                          <p>
-                            Reemplazo (n):
-                            <span class="text-weight-medium">{{
-                                Math.round(anio.reemplazo)
-                              }}</span>
-                          </p>
-                          <p>
-                            Compras (n):
-                            <span class="text-weight-medium">{{
-                                Math.round(anio.compras)
-                              }}</span>
-                          </p>
-                        </div>
-                        <div class="col-12 col-sm-6 col-md-4">
-                          <p>
-                            Disponibles (n):
-                            <span class="text-weight-medium">{{
-                                Math.round(anio.disponibles)
-                              }}</span>
-                          </p>
-                          <p>
-                            Ventas (n):
-                            <span class="text-weight-medium">{{
-                                Math.round(anio.ventas)
-                              }}</span>
-                          </p>
-                          <p class="text-body1">
-                            Total (n):
-                            <span class="text-weight-medium">
+                          </div>
+                          <div class="col-12 col-md-4">
+                            <p>
+                              Disponibles (n):
+                              <span class="text-weight-medium">{{
+                                  Math.round(anio.disponibles)
+                                }}</span>
+                            </p>
+                            <p>
+                              Ventas (n):
+                              <span class="text-weight-medium">{{
+                                  Math.round(anio.ventas)
+                                }}</span>
+                            </p>
+                            <p class="text-body1">
+                              Total (n):
+                              <span class="text-weight-medium">
                             {{ Math.round(anio.total) }}
                           </span>
-                          </p>
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    </q-tab-panel>
-                  </q-tab-panels>
-                </q-card-section>
-              </q-card>
+                      </q-tab-panel>
+                    </q-tab-panels>
+                  </q-card-section>
+                </q-card>
+              </q-intersection>
+            </div>
+            <div class="col-12 col-sm-6 col-md-3">
+              <q-intersection once transition="slide-left">
+                <q-card class="bg-primary">
+                  <q-card-section class="q-pb-none text-white">
+                    <div class="text-h6">Unidad animal</div>
+                  </q-card-section>
+                  <apex-line-small :seriedata="resultados.ua"/>
+                </q-card>
+              </q-intersection>
             </div>
             <div class="col-12 col-md-6">
-              <q-card>
-                <q-card-section>
-                  <apex-animal :animaldata="animal_select_value" />
-                </q-card-section>
-              </q-card>
+              <q-intersection once transition="slide-right">
+                <q-card>
+                  <q-card-section>
+                    <apex-animal :animaldata="animal_select_value"/>
+                  </q-card-section>
+                </q-card>
+              </q-intersection>
             </div>
             <div class="col-12 col-md-6">
-              <q-card>
-                <q-card-section>
-                  <apex-animal-perdida :animaldata="animal_select_value"/>
-                </q-card-section>
-              </q-card>
+              <q-intersection once transition="slide-left">
+                <q-card>
+                  <q-card-section>
+                    <apex-animal-perdida :animaldata="animal_select_value"/>
+                  </q-card-section>
+                </q-card>
+              </q-intersection>
             </div>
           </template>
           <div class="col self-center text-center" v-else>
-            <q-spinner-gears  size="70px" color="primary" />
+            <q-spinner-gears size="70px" color="primary"/>
             <p class="text-h5 text-weight-light">Simulador</p>
             <p class="text-subtitle2 text-weight-medium">
               Ingrese los valores iniciales de población animal para ejecutar
@@ -393,6 +409,43 @@ export default {
           }
         }
       ],
+      uaSetting: [
+        {
+          value: 1,
+          label: 'Vacas',
+          key: 'vacas'
+        },
+        {
+          value: 0.25,
+          label: 'Becerros(as)',
+          key: 'becerros'
+        },
+        {
+          value: 0.5,
+          label: 'Mautes(as)',
+          key: 'mautes'
+        },
+        {
+          value: 0.75,
+          label: 'Novillas',
+          key: 'novillas'
+        },
+        {
+          value: 0.75,
+          label: 'Novillos',
+          key: 'novillos'
+        },
+        {
+          value: 0.75,
+          label: 'Toretes',
+          key: 'toretes'
+        },
+        {
+          value: 1.5,
+          label: 'Toros',
+          key: 'toros'
+        }
+      ],
       resultados: {
         vacas: [],
         becerros: [],
@@ -400,7 +453,8 @@ export default {
         novillas: [],
         novillos: [],
         toretes: [],
-        toros: []
+        toros: [],
+        ua: []
       },
       load_procesar: false,
       animal_select: 'vacas',
@@ -449,11 +503,13 @@ export default {
         novillos: [],
         toretes: [],
         toros: [],
-        vacas: []
+        vacas: [],
+        ua: []
       }
       this.primerAnio()
       this.proyecion()
       this.animal_select_value = this.resultados[this.animal_select]
+      this.calcularUA()
       this.load_procesar = false
     },
     primerAnio () {
@@ -651,6 +707,16 @@ export default {
       data.total = data.disponibles
       return data
     },
+    calcularUA () {
+      this.resultados.ua = []
+      this.resultados.vacas.forEach((value, index, array) => {
+        let ua = 0
+        this.uaSetting.forEach((uasetting) => {
+          ua += this.resultados[uasetting.key][index].numero * uasetting.value
+        })
+        this.resultados.ua.push(ua)
+      })
+    },
     selectAnimal (key) {
       this.animal_select_value = this.resultados[key]
     },
@@ -721,6 +787,7 @@ export default {
         toro.total = toro.disponibles
       })
       this.selectAnimal(this.animal_select)
+      this.calcularUA()
     }
   }
 }
