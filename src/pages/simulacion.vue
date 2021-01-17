@@ -398,11 +398,14 @@ export default {
           calcularReemplazo: data => {
             return data.num_descarte + data.num_mortalidad
           },
+          calcularCompras: data => {
+            return Math.round(data.reemplazo)
+          },
           calcularDisponibilidad: data => {
             return data.numero - data.reemplazo + data.compras
           },
           calcularVentas: data => {
-            return data.reemplazo
+            return Math.round(data.num_descarte)
           },
           calcularTotal: data => {
             return data.disponibles
@@ -538,7 +541,7 @@ export default {
         data.reemplazo = animal.calcularReemplazo
           ? animal.calcularReemplazo(data)
           : 0
-        data.compras = 0
+        data.compras = animal.calcularCompras ? animal.calcularCompras(data) : 0
         data.disponibles = animal.calcularDisponibilidad(data)
         data.ventas = animal.calcularVentas ? animal.calcularVentas(data) : 0
         data.total = animal.calcularTotal(data)
@@ -618,7 +621,7 @@ export default {
       data.reemplazo = data.num_descarte + data.num_mortalidad
       data.compras = 0
       data.disponibles = data.numero - data.reemplazo + data.compras
-      data.ventas = data.num_descarte
+      data.ventas = Math.round(data.num_descarte)
       data.total = data.disponibles
       return data
     },
@@ -652,7 +655,7 @@ export default {
       data.rate_mortalidad = Object.assign({}, anteriorNovilla.rate_mortalidad)
       data.num_mortalidad = data.numero * (data.rate_mortalidad.default / 100)
       data.disponibles = data.numero - data.num_mortalidad
-      data.ventas = vacas.total + data.disponibles - 600
+      data.ventas = Math.round(vacas.total + data.disponibles - 600)
       data.total = data.disponibles - data.ventas
       return data
     },
@@ -669,7 +672,7 @@ export default {
       data.rate_mortalidad = Object.assign({}, anteriorNovillo.rate_mortalidad)
       data.num_mortalidad = data.numero * (data.rate_mortalidad.default / 100)
       data.disponibles = data.numero - data.num_mortalidad
-      data.ventas = data.disponibles
+      data.ventas = Math.round(data.disponibles)
       data.total = data.disponibles - data.ventas
       return data
     },
@@ -686,7 +689,7 @@ export default {
       data.rate_mortalidad = Object.assign({}, anteriorTorete.rate_mortalidad)
       data.num_mortalidad = data.numero * (data.rate_mortalidad.default / 100)
       data.disponibles = data.numero - data.num_mortalidad
-      data.ventas = data.disponibles
+      data.ventas = Math.round(data.disponibles)
       data.total = data.disponibles - data.ventas
       return data
     },
@@ -694,16 +697,16 @@ export default {
       const data = {
         numero: anteriorToro.total,
         rate_partos: null,
-        num_partos: 0,
-        compras: 0
+        num_partos: 0
       }
       data.rate_mortalidad = Object.assign({}, anteriorToro.rate_mortalidad)
       data.num_mortalidad = data.numero * (data.rate_mortalidad.default / 100)
       data.rate_descarte = Object.assign({}, anteriorToro.rate_descarte)
       data.num_descarte = data.numero * (data.rate_descarte.default / 100)
       data.reemplazo = data.num_mortalidad + data.num_descarte
+      data.compras = Math.round(data.reemplazo)
       data.disponibles = data.numero - data.reemplazo + data.compras
-      data.ventas = data.reemplazo
+      data.ventas = Math.round(data.num_descarte)
       data.total = data.disponibles
       return data
     },
@@ -732,7 +735,7 @@ export default {
         vaca.num_descarte = vaca.numero * (vaca.rate_descarte.default / 100)
         vaca.reemplazo = vaca.num_descarte + vaca.num_mortalidad
         vaca.disponibles = vaca.numero - vaca.reemplazo + vaca.compras
-        vaca.ventas = vaca.num_descarte
+        vaca.ventas = Math.round(vaca.num_descarte)
         vaca.total = vaca.disponibles
       })
       this.resultados.becerros.forEach((becerro, index) => {
@@ -756,7 +759,7 @@ export default {
         novilla.disponibles = novilla.numero - novilla.num_mortalidad
         if (index) {
           novilla.ventas =
-            novilla.disponibles + this.resultados.vacas[index].total - 600
+            Math.round(novilla.disponibles + this.resultados.vacas[index].total - 600)
         }
         novilla.total = novilla.disponibles - novilla.ventas
       })
@@ -765,7 +768,7 @@ export default {
         novillo.num_mortalidad =
           novillo.numero * (novillo.rate_mortalidad.default / 100)
         novillo.disponibles = novillo.numero - novillo.num_mortalidad
-        novillo.ventas = novillo.disponibles
+        novillo.ventas = Math.round(novillo.disponibles)
         novillo.total = novillo.disponibles - novillo.ventas
       })
       this.resultados.toretes.forEach((torete, index) => {
@@ -773,7 +776,7 @@ export default {
         torete.num_mortalidad =
           torete.numero * (torete.rate_mortalidad.default / 100)
         torete.disponibles = torete.numero - torete.num_mortalidad
-        torete.ventas = torete.disponibles
+        torete.ventas = Math.round(torete.disponibles)
         torete.total = torete.disponibles - torete.ventas
       })
       this.resultados.toros.forEach((toro, index, array) => {
@@ -782,8 +785,9 @@ export default {
           toro.numero * (toro.rate_mortalidad.default / 100)
         toro.num_descarte = toro.numero * (toro.rate_descarte.default / 100)
         toro.reemplazo = toro.num_descarte + toro.num_mortalidad
+        toro.compras = Math.round(toro.reemplazo)
         toro.disponibles = toro.numero - toro.reemplazo + toro.compras
-        toro.ventas = toro.reemplazo
+        toro.ventas = Math.round(toro.num_descarte)
         toro.total = toro.disponibles
       })
       this.selectAnimal(this.animal_select)
