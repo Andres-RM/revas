@@ -34,12 +34,24 @@ export default {
               tools: {
                 zoom: false,
                 zoomin: false,
-                zoomout: false
+                zoomout: false,
+                customIcons: this.$q.fullscreen.isActive ? [{
+                  icon: '<i class="fas fa-compress"></i>',
+                  title: 'contraer',
+                  class: 'q-px-sm',
+                  click: this.toogleFullScree
+                }] : [{
+                  icon: '<i class="fas fa-expand"></i>',
+                  title: 'expander',
+                  class: 'q-px-sm',
+                  click: this.toogleFullScree
+                }]
               }
             },
             zoom: {
               enabled: false
-            }
+            },
+            height: '100%'
           },
           colors: [
             '#74bdde',
@@ -201,6 +213,13 @@ export default {
         type: 'column',
         data: this.total
       })
+    },
+    toogleFullScree (chart, options, e) {
+      this.$q.fullscreen.toggle(this.$parent.$el.parentNode)
+        .then(() => {
+        })
+        .catch(() => {
+        })
     }
   }
 }
