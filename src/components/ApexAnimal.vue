@@ -86,14 +86,6 @@ export default {
           markers: {
             size: 4
           },
-          title: {
-            text: 'Movimiento del rebaño - crecimiento de población',
-            align: 'left',
-            offsetX: 30,
-            style: {
-              color: this.$q.dark.isActive ? '#fff' : '#232323'
-            }
-          },
           legend: {
             showForZeroSeries: false,
             horizontalAlign: 'left'
@@ -126,6 +118,12 @@ export default {
             labels: {
               style: {
                 colors: this.$q.dark.isActive ? '#fff' : '#232323'
+              }
+            },
+            title: {
+              text: 'Movimiento del rebaño - crecimiento de población',
+              style: {
+                color: this.$q.dark.isActive ? '#fff' : '#232323'
               }
             }
           },
