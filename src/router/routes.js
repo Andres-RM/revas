@@ -6,12 +6,18 @@ const routes = [
       {
         path: '',
         component: () => import('pages/Index.vue'),
-        name: 'home'
+        name: 'home',
+        meta: {
+          header_transparent: true
+        }
       },
       {
         path: '/simulacion',
         component: () => import('pages/simulacion'),
-        name: 'simulacion'
+        name: 'simulacion',
+        meta: {
+          header_reveal: true
+        }
       }
     ]
   },

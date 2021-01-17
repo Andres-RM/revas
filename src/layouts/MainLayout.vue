@@ -1,12 +1,11 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <q-header elevated >
-      <r-menu>
-        <r-menu-item v-for="(item, index) in menu" :key="index" :to="item.to">
-          {{ item.text }}
-        </r-menu-item>
-      </r-menu>
-    </q-header>
+    <r-menu>
+      <q-avatar slot="logo" rounded size="60px">
+        <img src="~assets/logo-ucv.jpeg">
+      </q-avatar>
+      <q-btn flat round size="lg" icon="fas fa-bars" slot="more"/>
+    </r-menu>
     <q-page-container>
       <router-view/>
     </q-page-container>
