@@ -190,7 +190,12 @@
                             <div class="row q-gutter-md items-center content-center">
                               <p class="q-mb-none">Compras (n):</p>
                               <div class="col">
-                                <q-input v-model.number="anio.compras" dense type="number" hide-hint hide-bottom-space></q-input>
+                                <q-input v-model.number="anio.compras"
+                                         dense
+                                         type="number"
+                                         hide-hint
+                                         @change="handleChange($event, false)"
+                                         hide-bottom-space></q-input>
                               </div>
                             </div>
                           </div>
@@ -204,7 +209,12 @@
                             <div class="row q-gutter-md items-center content-center">
                               <p class="q-mb-none">Ventas (n):</p>
                               <div class="col">
-                                <q-input v-model.number="anio.ventas" dense type="number" hide-hint hide-bottom-space></q-input>
+                                <q-input v-model.number="anio.ventas"
+                                         dense
+                                         type="number"
+                                         hide-hint
+                                         @change="handleChange($event, false)"
+                                         hide-bottom-space></q-input>
                               </div>
                             </div>
                             <p class="text-body1">
