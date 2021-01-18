@@ -44,11 +44,11 @@ export default {
   watch: {
     value (val) {
       this.__update('space', val)
-      this.layout.__animate()
     },
     $route (to) {
       this.reveal = to.meta.header_reveal ? to.meta.header_reveal : false
       this.transparent = to.meta.header_transparent ? to.meta.header_transparent : false
+      this.__update('space', !this.transparent)
     }
   },
   computed: {

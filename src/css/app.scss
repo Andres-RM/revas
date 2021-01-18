@@ -12,7 +12,7 @@
   position: fixed;
   transition: padding 0.3s ease, boxShadow 0.3s ease;
   color: $dark;
-  z-index: 4000;
+  z-index: 2000;
 
   &.menu-primary {
     background-color: $primary;
@@ -28,7 +28,8 @@
 
   &.menu-transparent {
     background-color: transparent;
-    .menu-more{
+
+    .menu-more {
       color: $secondary;
     }
   }
@@ -39,6 +40,22 @@
     justify-content: center;
     align-content: center;
     align-items: center;
+
+    .title {
+      padding-left: 8px;
+      margin: 0;
+      color: #fff;
+      font-size: 2rem;
+      font-weight: 400;
+      line-height: 1;
+
+      span {
+        font-size: .8rem;
+        font-weight: 300;
+        display: block;
+        text-align: end;
+      }
+    }
   }
 
   &-content {
@@ -60,9 +77,10 @@
     color: $primary;
   }
 
-  &-item{
+  &-item {
     list-style: none;
-    a{
+
+    a {
       padding: 15px;
       display: block;
       text-decoration: none;
@@ -72,7 +90,8 @@
       transition: all .2s ease;
       text-transform: uppercase;
       color: $dark;
-      &.router-link-exact-active, &:hover{
+
+      &.router-link-exact-active, &:hover {
         opacity: 1;
       }
 
@@ -80,11 +99,64 @@
   }
 }
 
-.super-title{
+.super-menu {
+  position: fixed;
+  background-color: $primary;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all .6s ease;
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  ul {
+    overflow: hidden;
+    list-style: none;
+
+    li {
+      font-size: 3rem;
+      font-weight: 400;
+      transition: all .3s ease;
+      overflow: hidden;
+      list-style: none;
+
+      a {
+        padding: 25px 10px;
+        display: block;
+        position: relative;
+        outline: none;
+        text-decoration: none;
+        color: #fff;
+        transition: all .3s ease, transform .4s ease .2s, opacity .3s ease .2s;
+        transform: translate(0);
+
+        &:hover {
+          letter-spacing: 4px;
+        }
+
+        &.router-link-exact-active::after {
+          content: "";
+          position: absolute;
+          top: 20px;
+          left: 10px;
+          width: 30px;
+          height: 4px;
+          display: block;
+          background: #fff
+        }
+      }
+    }
+  }
+}
+
+.super-title {
   position: absolute;
   left: 10%;
   top: 45%;
-  transform: translate(0,-50%);
+  transform: translate(0, -50%);
   color: #fff;
   width: 45%;
   z-index: 7;
@@ -98,10 +170,12 @@
     top: 0;
     left: 0;
     display: block;
-    .line{
+
+    .line {
       position: absolute;
       background: $secondary;
       transition: width .2s linear;
+
       &.line-01 {
         transition-delay: .2s;
         width: 100%;
@@ -110,6 +184,7 @@
         right: 0;
         height: .7em;
       }
+
       &.line-02 {
         transition-delay: .4s;
         width: .7em;
@@ -117,6 +192,7 @@
         right: 0;
         height: 4em;
       }
+
       &.line-03 {
         transition-delay: .6s;
         width: 100%;
@@ -124,13 +200,15 @@
         right: 0;
         height: .7em;
       }
+
       &.line-04 {
         transition-delay: .6s;
         width: .7em;
         top: 0;
         left: 0;
-        height:   100%;
+        height: 100%;
       }
+
       &.line-05 {
         transition-delay: .4s;
         width: .7em;
@@ -140,24 +218,25 @@
       }
     }
   }
-  &-content{
+
+  &-content {
     top: 50%;
-    transform: translate(0,-50%);
+    transform: translate(0, -50%);
     position: absolute;
     padding-left: 3em;
 
-    h1{
-      transform: translate(0,0);
+    h1 {
+      transform: translate(0, 0);
       font-size: 4em;
       line-height: 1.1em;
-      transition: transform .5s ease-out 1.5s,opacity 1.5s ease-out 1.5s;
+      transition: transform .5s ease-out 1.5s, opacity 1.5s ease-out 1.5s;
       padding-bottom: 1.2rem;
       font-weight: 400;
       margin: 0;
     }
 
-    p{
-      transform: translate(0,0);
+    p {
+      transform: translate(0, 0);
     }
   }
 }

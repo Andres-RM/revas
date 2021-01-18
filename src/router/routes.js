@@ -16,7 +16,8 @@ const routes = [
         component: () => import('pages/simulacion'),
         name: 'simulacion',
         meta: {
-          header_reveal: true
+          header_reveal: true,
+          header_transparent: false
         }
       }
     ]

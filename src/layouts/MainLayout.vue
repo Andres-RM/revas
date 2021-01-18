@@ -2,12 +2,14 @@
   <q-layout view="hHh lpR fff">
     <r-menu>
       <template slot="logo">
-        <q-avatar  size="60px">
+        <q-avatar size="60px">
           <img src="~assets/logo-ucv.png">
         </q-avatar>
+        <div class="title">MOREVA <span>simulador</span></div>
       </template>
-      <q-btn flat round size="lg" icon="fas fa-bars" slot="more"/>
+      <q-btn @click="toogle_menu" flat round size="lg" icon="fas fa-bars" slot="more"/>
     </r-menu>
+    <r-super-menu :class="supermenu ? 'active': ''" @togglemenu="toogle_menu"></r-super-menu>
     <q-page-container>
       <router-view/>
     </q-page-container>
@@ -32,7 +34,13 @@ export default {
           },
           text: 'Simulacion'
         }
-      ]
+      ],
+      supermenu: false
+    }
+  },
+  methods: {
+    toogle_menu () {
+      this.supermenu = !this.supermenu
     }
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <div class="row wrap" :style="style">
+    <div class="row wrap relative-position" :style="style">
       <div class="col-sm-6 col-md-5 bg-primary">
         <div class="super-title">
           <div class="square">
@@ -16,12 +16,21 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-6 col-md-7">
+      <div class="col-12 col-sm-6 col-md-7">
         <q-img
-          class="dimmed"
+          basic
           :src="require('assets/christina-maiia-VaQkEZMeI2k-unsplash.jpg')"
           :height="$q.screen.height + 'px'"
         >
+          <div class="row justify-around wrap items-center fit">
+            <q-btn color="primary"
+                   class="self-end q-mb-xl"
+                   icon-right="fas fa-angle-right"
+                   size="lg"
+                   @click="goSimulacion">
+              <span class="text-white">Empieza ahora</span>
+            </q-btn>
+          </div>
         </q-img>
       </div>
     </div>
@@ -36,6 +45,11 @@ export default {
       return {
         minHeight: this.$q.screen.height + 'px'
       }
+    }
+  },
+  methods: {
+    goSimulacion () {
+      this.$router.push({ name: 'simulacion' })
     }
   }
 }
