@@ -118,13 +118,13 @@ module.exports = function (/* ctx */) {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
       manifest: {
-        name: 'Revas app',
-        short_name: 'Revas app',
-        description: 'Simulador de movimiento de rebaños vacunos',
+        name: 'MOREVA APP',
+        short_name: 'MOREVA',
+        description: 'Movimiento de rabaños vacunos - simulador',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
-        theme_color: '#027be3',
+        theme_color: '#262945',
         icons: [
           {
             src: 'icons/icon-128x128.png',
