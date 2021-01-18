@@ -1,9 +1,11 @@
 <template>
-  <q-layout view="hHh lpR fFf">
+  <q-layout view="hHh lpR fff">
     <r-menu>
-      <q-avatar slot="logo" rounded size="60px">
-        <img src="~assets/logo-ucv.jpeg">
-      </q-avatar>
+      <template slot="logo">
+        <q-avatar  size="60px">
+          <img src="~assets/logo-ucv.png">
+        </q-avatar>
+      </template>
       <q-btn flat round size="lg" icon="fas fa-bars" slot="more"/>
     </r-menu>
     <q-page-container>

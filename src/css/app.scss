@@ -8,7 +8,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 2.5rem;
+  padding: 10px 2.5rem 5px;
   position: fixed;
   transition: padding 0.3s ease, boxShadow 0.3s ease;
   color: $dark;
@@ -28,10 +28,17 @@
 
   &.menu-transparent {
     background-color: transparent;
+    .menu-more{
+      color: $secondary;
+    }
   }
 
   &-logo {
-    max-width: 250px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
   }
 
   &-content {
@@ -69,6 +76,88 @@
         opacity: 1;
       }
 
+    }
+  }
+}
+
+.super-title{
+  position: absolute;
+  left: 10%;
+  top: 45%;
+  transform: translate(0,-50%);
+  color: #fff;
+  width: 45%;
+  z-index: 7;
+  transition: opacity .5s;
+  font-size: 18px;
+
+  .square {
+    width: 19em;
+    height: 21rem;
+    position: relative;
+    top: 0;
+    left: 0;
+    display: block;
+    .line{
+      position: absolute;
+      background: $secondary;
+      transition: width .2s linear;
+      &.line-01 {
+        transition-delay: .2s;
+        width: 100%;
+        left: 0;
+        top: 0;
+        right: 0;
+        height: .7em;
+      }
+      &.line-02 {
+        transition-delay: .4s;
+        width: .7em;
+        top: 0;
+        right: 0;
+        height: 4em;
+      }
+      &.line-03 {
+        transition-delay: .6s;
+        width: 100%;
+        bottom: 0;
+        right: 0;
+        height: .7em;
+      }
+      &.line-04 {
+        transition-delay: .6s;
+        width: .7em;
+        top: 0;
+        left: 0;
+        height:   100%;
+      }
+      &.line-05 {
+        transition-delay: .4s;
+        width: .7em;
+        bottom: 0;
+        right: 0;
+        height: 4em;
+      }
+    }
+  }
+  &-content{
+    top: 50%;
+    transform: translate(0,-50%);
+    position: absolute;
+    padding-left: 3em;
+
+    h1{
+      transform: translate(0,0);
+      font-size: 4em;
+      line-height: 1.1em;
+      transition: transform .5s ease-out 1.5s,opacity 1.5s ease-out 1.5s;
+      padding-bottom: 1.2rem;
+      font-weight: 400;
+      margin: 0;
+    }
+
+    p{
+      transform: translate(0,0);
     }
   }
 }
