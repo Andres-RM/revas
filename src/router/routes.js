@@ -8,7 +8,8 @@ const routes = [
         component: () => import('pages/Index.vue'),
         name: 'home',
         meta: {
-          header_transparent: true
+          header_transparent: true,
+          footer_transparent: true
         }
       },
       {
