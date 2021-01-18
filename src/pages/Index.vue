@@ -22,7 +22,7 @@
           :src="require('assets/movimiento de rebaño vacuno.jpg')"
           :height="$q.screen.height + 'px'"
         >
-          <div class="row justify-around wrap items-center fit">
+          <div class="row justify-around wrap items-center fit" style="padding-bottom: 40px">
             <q-btn color="primary"
                    class="self-end q-mb-xl"
                    icon-right="fas fa-angle-right"
