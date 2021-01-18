@@ -11,7 +11,7 @@
             <em class="line line-05"></em>
           </div>
           <div class="super-title-content">
-            <h1>Moviento de Rebaño Vacuno</h1>
+            <h1>Movimiento de Rebaño Vacuno</h1>
             <p class="text-h6 text-weight-light">Aprende el movimiento en el tiempo de un rebaño vacuno</p>
           </div>
         </div>
