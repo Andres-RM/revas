@@ -2,7 +2,7 @@
   "name": "revas",
   "version": "0.0.1",
   "description": "Simulador de movimiento de rebaños vacunos",
-  "productName": "Revas app",
+  "productName": "Movimiento de rabaños vacunos - simulador",
   "author": "andres <ramireznadres1994@gmail.com>",
   "private": true,
   "scripts": {
