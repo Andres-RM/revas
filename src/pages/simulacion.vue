@@ -13,7 +13,7 @@
                 v-for="(animal, index) in animalesInput"
                 :key="index"
                 filled
-                color="secondary"
+                color="accent"
                 dense
                 type="number"
                 :label="animal.label"

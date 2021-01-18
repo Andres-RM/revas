@@ -19,7 +19,7 @@
       <div class="col-12 col-sm-6 col-md-7">
         <q-img
           basic
-          :src="require('assets/christina-maiia-VaQkEZMeI2k-unsplash.jpg')"
+          :src="require('assets/movimiento de rebaño vacuno.jpg')"
           :height="$q.screen.height + 'px'"
         >
           <div class="row justify-around wrap items-center fit">
