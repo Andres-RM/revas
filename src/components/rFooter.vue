@@ -4,7 +4,7 @@
       <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/ve/" target="_blank" class="lic-img">
         <img src="~assets/lic.png">
       </a>
-      <p class="copy">2021 | <a href="http://www.ucv.ve/" target="_blank">Universidad Central de venezuela</a>
+      <p class="copy">2021 | <a href="http://www.ucv.ve/" target="_blank">Universidad Central de Venezuela</a>
       </p>
     </div>
   </footer>
