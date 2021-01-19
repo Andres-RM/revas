@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><title><string>Movimiento del rebaño en vacunos</string>
+</title>
+<language>es</language>
+<description><string>Objeto de Aprendizaje de Contenidos Abiertos donde se aprende el comportamiento del crecimiento poblacional de un rebaño vacuno con el uso de un simulador de proyección</string>
+</description>
+<keyword><string>OACA MOREVA 2020</string>
+</keyword>
+</general>
+<lifeCycle><version><string>V1</string>
+</version>
+<contribute>
+<role><source>LOMv1.0</source>
+<value>subject matter expert</value></role>
+<entity>
+<![CDATA[BEGIN:VCARD
+VERSION:3.0
+N:Vargas;Daniel;;;
+FN:Daniel Vargas
+EMAIL;TYPE=INTERNET:danivagu2000@gmail.com
+ORG:UCV
+END:VCARD]]></entity>
+</contribute>
+<contribute>
+<role><source>LOMv1.0</source>
+<value>educational validator</value></role>
+<entity>
+<![CDATA[BEGIN:VCARD
+VERSION:3.0
+N:Hernandez;Yosly;;;
+FN:Yosly Hernandez
+EMAIL;TYPE=INTERNET:yoslyhernandez@gmail.com
+ORG:UCV
+END:VCARD]]></entity>
+</contribute>
+<contribute>
+<role><source>LOMv1.0</source>
+<value>technical implementer</value></role>
+<entity>
+<![CDATA[BEGIN:VCARD
+VERSION:3.0
+N:Ramirez;Luis;;;
+FN:Luis Ramirez
+EMAIL;TYPE=INTERNET:ramirezandres1994@gmail.com
+ORG:UCV
+END:VCARD]]></entity>
+</contribute>
+</lifeCycle>
+<metaMetadata><identifier>
+<catalog>OACAUCV</catalog>
+<entry>MOREVA</entry>
+</identifier>
+<metadataSchema>LOMv1.2</metadataSchema>
+</metaMetadata>
+<technical><format>text/ html</format>
+<location>https://ucv-moreva.herokuapp.com/</location>
+</technical>
+<educational><learningResourceType><source>LOMv1.0</source>
+<value>simulation</value></learningResourceType>
+<context><source>http://eureka.ntic.org/vdex/NORMETICv1.2_element_5_6_contexte_voc.xml</source>
+<value>formation en entreprise</value></context>
+<context><source>http://eureka.ntic.org/vdex/NORMETICv1.2_element_5_6_contexte_voc.xml</source>
+<value>université premier cycle</value></context>
+<context><source>LOMv1.0</source>
+<value>training</value></context>
+</educational>
+<rights><cost><source>LOMv1.0</source>
+<value>no</value></cost>
+<copyrightAndOtherRestrictions><source>LOMv1.0</source>
+<value>yes</value></copyrightAndOtherRestrictions>
+<description><string>Recurso educativo de libre acceso bajo licencia creative commons</string>
+</description>
+</rights>
+<classification><purpose><source>LOMv1.0</source>
+<value>educational objective</value></purpose>
+<taxonPath><source><string>Facultad de Agronomía</string>
+</source>
+<taxon>
+<id>1</id>
+<entry><string>agronomia</string>
+</entry>
+</taxon>
+</taxonPath>
+</classification>
+</lom>
