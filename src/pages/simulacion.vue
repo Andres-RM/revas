@@ -4,7 +4,32 @@
       <div class="col-12 col-md-2">
         <q-card>
           <q-card-section>
-            <div class="text-subtitle1">Población Inicial</div>
+            <div class="text-subtitle1">
+              Población Inicial
+              <q-icon name="fas fa-info-circle" right @click="mouse_hover"
+                      @mouseover="mouse_hover" @mouseleave="mouse_hover"/>
+            </div>
+            <q-menu no-parent-event v-model="menu_help" anchor="top right" self="top left" max-width="300px"
+                    :offset="[15, -5]">
+              <q-card class="menu-helper text-white">
+                <q-card-section>
+                  <div class="text-subtitle1">Datos iniciales</div>
+                  <q-separator color="white"/>
+                  <p class="q-mt-sm">Este formulario contiene los valores iniciales para ejecutar el
+                    simulador.</p>
+                  <p>
+                    <span class="text-subtitle2 text-weight-medium"> Animales:</span>
+                    cada valor representa
+                    las cantidades de animales para cada tipo fisiológico en el inicio del primer año de
+                    proyección
+                  </p>
+                  <p>
+                    <span class="text-subtitle2 text-weight-medium"> Años proyectados:</span>
+                    representa los años de proyección del crecimineto poblacional del rebaño
+                  </p>
+                </q-card-section>
+              </q-card>
+            </q-menu>
           </q-card-section>
           <q-separator/>
           <q-card-section>
@@ -29,21 +54,23 @@
                 v-model="anio"
                 :options="[5, 6, 7, 8, 9, 10]"
                 dense
-                color="secondary"
+                color="accent"
                 filled
                 label="Años proyectados"
                 lazy-rules
                 :rules="[val => (val !== null && val !== '') || 'Requerido']"
               />
-              <q-btn
-                type="submit"
-                color="primary"
-                label="procesar"
-                dense
-                no-caps
-                :loading="load_procesar"
-                no-wrap
-              />
+              <div class="row justify-end">
+                <q-btn
+                  type="submit"
+                  color="primary"
+                  label="procesar"
+                  dense
+                  no-caps
+                  :loading="load_procesar"
+                  no-wrap
+                />
+              </div>
             </q-form>
           </q-card-section>
         </q-card>
@@ -239,7 +266,22 @@
               <q-intersection once transition="slide-left">
                 <q-card class="bg-primary">
                   <q-card-section class="q-pb-none text-white">
-                    <div class="text-h6">Unidad animal</div>
+                    <div class="text-h6">
+                      Unidad animal
+                      <q-icon name="fas fa-info-circle" right @click="menu_help2 = !menu_help2"
+                        @mouseover="menu_help2 = !menu_help2" @mouseleave="menu_help2 = !menu_help2"> </q-icon>
+                      <q-menu :offset="[50, 10]" v-model="menu_help2" no-parent-event>
+                        <q-card dark bordered>
+                          <q-card-section>
+                            <div class="text-subtitle2">Unidad Animal</div>
+                            <q-separator></q-separator>
+                            <div class="text-subtitle3"> Una unidad animal equivale a 450 kg <br> de peso vivo y se
+
+                              expresa 1UA = 450 kg.</div>
+                          </q-card-section>
+                        </q-card>
+                      </q-menu>
+                    </div>
                   </q-card-section>
                   <apex-line-small :seriedata="resultados.ua"/>
                 </q-card>
@@ -265,7 +307,7 @@
             </div>
           </template>
           <div class="col self-center text-center" v-if="!resultados.vacas.length && !load_procesar">
-            <q-icon name="fas fa-cubes" color="primary" style="font-size: 4.4em;"/>
+            <q-icon name="fas fa-cubes" color="accent" style="font-size: 4.4em;"/>
             <p class="text-h5 text-weight-light">Simulador</p>
             <p class="text-subtitle2 text-weight-medium">
               Ingrese los valores iniciales de población animal para ejecutar
@@ -511,7 +553,9 @@ export default {
       animal_select_value: [],
       tab_anio: 0,
       anio: 5,
-      handleflag: false
+      handleflag: false,
+      menu_help: false,
+      menu_help2: false
     }
   },
   methods: {
@@ -816,7 +860,16 @@ export default {
         this.calcularUA()
         this.handleflag = false
       }
+    },
+    mouse_hover () {
+      this.menu_help = !this.menu_help
     }
   }
 }
 </script>
+
+<style scoped lang="scss">
+.menu-helper {
+  background-color: rgba(0, 0, 0, .75);
+}
+</style>

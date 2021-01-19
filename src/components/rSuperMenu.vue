@@ -18,7 +18,7 @@
       <div class="col-12 col-sm-3 col-md-4" style="border-left: 1px solid rgba(255,255,255,.05)">
         <div class="row column justify-center full-height">
           <div class="email text-white">
-            <h3>Email</h3>
+            <h3>Creditos</h3>
             <p class="text-subtitle1">
               <q-icon name="fas fa-envelope"/>
               yoslyhernandez@gmail.com <br>
@@ -34,7 +34,7 @@
             </p>
           </div>
           <div class="email text-white">
-            <h3>OACA</h3>
+            <h3 style="line-height: 1.5">Objeto de Aprendizaje de <br>Contenidos Abiertos</h3>
             <p class="text-subtitle1">
               Movimiento de rebaño vacuno - simulador
             </p>
@@ -79,7 +79,6 @@ export default {
       this.$emit('togglemenu', e)
     },
     hover (e) {
-      console.log(e.target.offsetTop)
       this.style.top = e.target.offsetTop + 70 + 'px'
     },
     leave () {
