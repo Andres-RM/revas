@@ -101,7 +101,7 @@
 
 .super-menu {
   position: fixed;
-  background-color: $primary;
+  background-color: rgba(38, 41, 69, 0.95);
   z-index: 1000;
   opacity: 0;
   visibility: hidden;
@@ -277,6 +277,14 @@
       color: inherit;
     }
   }
+}
+
+.logo-ucv {
+  max-width: 150px;
+}
+
+.contact{
+  padding: 2rem 1rem;
 }
 
 @media screen and (max-width: 1024px) {
