@@ -19,7 +19,11 @@
                 :label="animal.label"
                 v-model.number="animal.value"
                 lazy-rules
-                :rules="[val => (val !== null && val !== '') || 'Requerido']"
+                min="0"
+                :rules="[
+                  val => (val !== null && val !== '') || 'Requerido',
+                  val => (val >= 0) || 'Numero debe ser positivo'
+                  ]"
               />
               <q-select
                 v-model="anio"
@@ -261,7 +265,7 @@
             </div>
           </template>
           <div class="col self-center text-center" v-if="!resultados.vacas.length && !load_procesar">
-            <q-icon name="fas fa-cubes" color="primary" style="font-size: 4.4em;" />
+            <q-icon name="fas fa-cubes" color="primary" style="font-size: 4.4em;"/>
             <p class="text-h5 text-weight-light">Simulador</p>
             <p class="text-subtitle2 text-weight-medium">
               Ingrese los valores iniciales de población animal para ejecutar
@@ -269,7 +273,7 @@
             </p>
           </div>
           <q-inner-loading :showing="load_procesar">
-            <q-spinner-gears size="50px" color="primary" />
+            <q-spinner-gears size="50px" color="primary"/>
           </q-inner-loading>
         </div>
       </div>
@@ -285,7 +289,7 @@ export default {
       animalesInput: [
         {
           value: null,
-          label: 'Vacas',
+          label: 'Vacas *',
           key: 'vacas',
           rate_partos: {
             min: 60,
@@ -320,7 +324,7 @@ export default {
         },
         {
           value: null,
-          label: 'Mautes(as)',
+          label: 'Mautes(as) *',
           key: 'mautes',
           rate_mortalidad: {
             min: 1,
@@ -337,7 +341,7 @@ export default {
         },
         {
           value: null,
-          label: 'Novillas',
+          label: 'Novillas *',
           key: 'novillas',
           rate_mortalidad: {
             min: 1,
@@ -354,7 +358,7 @@ export default {
         },
         {
           value: null,
-          label: 'Novillos',
+          label: 'Novillos *',
           key: 'novillos',
           rate_mortalidad: {
             min: 1,
@@ -374,7 +378,7 @@ export default {
         },
         {
           value: null,
-          label: 'Toretes',
+          label: 'Toretes *',
           key: 'toretes',
           rate_mortalidad: {
             min: 1,
@@ -394,7 +398,7 @@ export default {
         },
         {
           value: null,
-          label: 'Toros',
+          label: 'Toros *',
           key: 'toros',
           rate_mortalidad: {
             min: 0,
