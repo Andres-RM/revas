@@ -207,16 +207,12 @@
                               </div>
                               <p>
                                 Descarte (nº):
-                                <span class="text-weight-medium">{{
-                                    Math.round(anio.num_descarte)
-                                  }}</span>
+                                <span class="text-weight-medium">{{Math.round(anio.num_descarte)}}</span>
                               </p>
                             </template>
                             <p>
                               Reemplazo (n):
-                              <span class="text-weight-medium">{{
-                                  Math.round(anio.reemplazo)
-                                }}</span>
+                              <span class="text-weight-medium">{{Math.round(anio.reemplazo)}}</span>
                             </p>
                             <div class="row q-gutter-md items-center content-center">
                               <p class="q-mb-none">Compras (n):</p>
@@ -225,6 +221,10 @@
                                          dense
                                          type="number"
                                          hide-hint
+                                         :min="0"
+                                         :rules="[
+                                            v => ( v >= 0 ) || 'Debe ser un numero positivo'
+                                           ]"
                                          @change="handleChange($event, false)"
                                          hide-bottom-space></q-input>
                               </div>
@@ -233,9 +233,7 @@
                           <div class="col-12 col-md-4">
                             <p>
                               Disponibles (n):
-                              <span class="text-weight-medium">{{
-                                  Math.round(anio.disponibles)
-                                }}</span>
+                              <span class="text-weight-medium">{{Math.round(anio.disponibles)}}</span>
                             </p>
                             <div class="row q-gutter-md items-center content-center">
                               <p class="q-mb-none">Ventas (n):</p>
@@ -244,6 +242,12 @@
                                          dense
                                          type="number"
                                          hide-hint
+                                         :max="Math.round(anio.disponibles)"
+                                         :min="0"
+                                         :rules="[
+                                            v => (v <= Math.round(anio.disponibles)) || 'No puede ser mayor que lo disponible',
+                                            v => ( v >= 0 ) || 'Debe ser un numero positivo'
+                                           ]"
                                          @change="handleChange($event, false)"
                                          hide-bottom-space></q-input>
                               </div>
@@ -269,7 +273,7 @@
                     <div class="text-h6">
                       Unidad animal
                       <q-icon name="fas fa-info-circle" right @click="menu_help2 = !menu_help2"
-                        @mouseover="menu_help2 = !menu_help2" @mouseleave="menu_help2 = !menu_help2"> </q-icon>
+                              @mouseover="menu_help2 = !menu_help2" @mouseleave="menu_help2 = !menu_help2"></q-icon>
                       <q-menu :offset="[50, 10]" v-model="menu_help2" no-parent-event>
                         <q-card dark bordered>
                           <q-card-section>
@@ -277,7 +281,8 @@
                             <q-separator></q-separator>
                             <div class="text-subtitle3"> Una unidad animal equivale a 450 kg <br> de peso vivo y se
 
-                              expresa 1UA = 450 kg.</div>
+                              expresa 1UA = 450 kg.
+                            </div>
                           </q-card-section>
                         </q-card>
                       </q-menu>
@@ -647,7 +652,10 @@ export default {
           this.resultados.toretes[i]
         )
         this.resultados.toretes.push(toretes)
-        const toro = this.procesarToro(this.resultados.toros[i])
+        const toro = this.procesarToro(
+          this.resultados.toros[i],
+          this.resultados.toretes[i]
+        )
         this.resultados.toros.push(toro)
       }
     },
@@ -684,7 +692,7 @@ export default {
       data.num_descarte = data.numero * (data.rate_descarte.default / 100)
       data.reemplazo = data.num_descarte + data.num_mortalidad
       data.compras = 0
-      data.disponibles = data.numero - data.reemplazo + data.compras + data.compras
+      data.disponibles = data.numero - data.reemplazo + data.compras
       data.ventas = Math.round(data.num_descarte)
       data.total = data.disponibles
       return data
@@ -719,8 +727,14 @@ export default {
       data.rate_mortalidad = Object.assign({}, anteriorNovilla.rate_mortalidad)
       data.num_mortalidad = data.numero * (data.rate_mortalidad.default / 100)
       data.disponibles = data.numero - data.num_mortalidad + data.compras
-      data.ventas = Math.round(vacas.total + data.disponibles - 600)
-      data.total = data.disponibles - data.ventas
+      data.ventas = 0
+      if (data.disponibles) {
+        data.ventas = Math.round(
+          (vacas.total + data.disponibles) > 600
+            ? vacas.total + data.disponibles - 600 : 0)
+      }
+      data.total = data.disponibles
+      if (data.ventas <= data.disponibles) data.total -= data.ventas
       return data
     },
     procesarNovillos (anteriorMaute, anteriorNovillo) {
@@ -757,9 +771,9 @@ export default {
       data.total = data.disponibles - data.ventas
       return data
     },
-    procesarToro (anteriorToro) {
+    procesarToro (anteriorToro, anteriorTorete) {
       const data = {
-        numero: anteriorToro.total,
+        numero: anteriorToro.total + anteriorTorete.total,
         rate_partos: null,
         num_partos: 0
       }
@@ -809,25 +823,27 @@ export default {
           becerro.num_mortalidad =
             becerro.numero * (becerro.rate_mortalidad.default / 100)
           becerro.disponibles = becerro.numero - becerro.num_mortalidad + becerro.compras
-          becerro.total = becerro.disponibles - becerro.ventas
+          becerro.total = becerro.disponibles - becerro.ventas >= 0 ? becerro.disponibles - becerro.ventas : 0
         })
         this.resultados.mautes.forEach((maute, index) => {
           if (index) maute.numero = this.resultados.becerros[index - 1].total
           maute.num_mortalidad =
             maute.numero * (maute.rate_mortalidad.default / 100)
           maute.disponibles = maute.numero - maute.num_mortalidad + maute.compras
-          maute.total = maute.disponibles - maute.ventas
+          maute.total = maute.disponibles - maute.ventas >= 0 ? maute.disponibles - maute.ventas : 0
         })
         this.resultados.novillas.forEach((novilla, index) => {
           if (index) novilla.numero = this.resultados.mautes[index - 1].total / 2
           novilla.num_mortalidad =
             novilla.numero * (novilla.rate_mortalidad.default / 100)
           novilla.disponibles = novilla.numero - novilla.num_mortalidad + novilla.compras
-          if (index && compraventa) {
+          if (index && compraventa && novilla.disponibles) {
             novilla.ventas =
-              Math.round(novilla.disponibles + this.resultados.vacas[index].total - 600)
+              Math.round(
+                (novilla.disponibles + this.resultados.vacas[index].total) > 600
+                  ? novilla.disponibles + this.resultados.vacas[index].total - 600 : 0)
           }
-          novilla.total = novilla.disponibles - novilla.ventas
+          novilla.total = novilla.disponibles - novilla.ventas >= 0 ? novilla.disponibles - novilla.ventas : 0
         })
         this.resultados.novillos.forEach((novillo, index) => {
           if (index) novillo.numero = this.resultados.mautes[index - 1].total / 4
@@ -835,7 +851,7 @@ export default {
             novillo.numero * (novillo.rate_mortalidad.default / 100)
           novillo.disponibles = novillo.numero - novillo.num_mortalidad + novillo.compras
           if (compraventa) novillo.ventas = Math.round(novillo.disponibles)
-          novillo.total = novillo.disponibles - novillo.ventas
+          novillo.total = novillo.disponibles - novillo.ventas >= 0 ? novillo.disponibles - novillo.ventas : 0
         })
         this.resultados.toretes.forEach((torete, index) => {
           if (index) torete.numero = this.resultados.mautes[index - 1].total / 4
@@ -843,10 +859,10 @@ export default {
             torete.numero * (torete.rate_mortalidad.default / 100)
           torete.disponibles = torete.numero - torete.num_mortalidad + torete.compras
           if (compraventa) torete.ventas = Math.round(torete.disponibles)
-          torete.total = torete.disponibles - torete.ventas
+          torete.total = torete.disponibles - torete.ventas >= 0 ? torete.disponibles - torete.ventas : 0
         })
         this.resultados.toros.forEach((toro, index, array) => {
-          if (index) toro.numero = array[index - 1].total
+          if (index) toro.numero = array[index - 1].total + this.resultados.toretes[index - 1].total
           toro.num_mortalidad =
             toro.numero * (toro.rate_mortalidad.default / 100)
           toro.num_descarte = toro.numero * (toro.rate_descarte.default / 100)
