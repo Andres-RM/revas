@@ -26,7 +26,7 @@
             </p>
             <p class="text-subtitle1">
               <q-icon name="fas fa-envelope"/>
-              danivagu2000@gmail.com <br>(Prof. Daniel Vargaz)
+              danivagu2000@gmail.com <br>(Prof. Daniel Vargas)
             </p>
             <p class="text-subtitle1">
               <q-icon name="fas fa-envelope"/>
