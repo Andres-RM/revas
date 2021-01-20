@@ -27,6 +27,10 @@
                     <span class="text-subtitle2 text-weight-medium"> Años proyectados:</span>
                     representa los años de proyección del crecimineto poblacional del rebaño
                   </p>
+                  <p>
+                    <span class="text-subtitle2 text-weight-medium"> Pob. limite:</span>
+                    representa el limite de población en "vacas" sobre el espacio del rebaño o finca.
+                  </p>
                 </q-card-section>
               </q-card>
             </q-menu>
@@ -57,14 +61,28 @@
                 color="accent"
                 filled
                 label="Años proyectados"
-                lazy-rules
                 :rules="[val => (val !== null && val !== '') || 'Requerido']"
               />
-              <div class="row justify-end">
+              <q-input
+                filled
+                color="accent"
+                dense
+                type="number"
+                label="Pob. Limite *"
+                v-model.number="limite_vacas"
+                min="0"
+                :rules="[
+                  val => (val !== null && val !== '') || 'Requerido',
+                  val => (val >= 0) || 'Numero debe ser positivo',
+                  val => animalesInput[0].value || 'Requiere valor en vacas',
+                  val => (val > animalesInput[0].value ) || 'Debe ser mayor al valor en vacas'
+                  ]"
+              />
+              <div class="row justify-end q-mt-md">
                 <q-btn
                   type="submit"
                   color="primary"
-                  label="procesar"
+                  label="Procesar"
                   dense
                   no-caps
                   :loading="load_procesar"
@@ -207,12 +225,12 @@
                               </div>
                               <p>
                                 Descarte (nº):
-                                <span class="text-weight-medium">{{Math.round(anio.num_descarte)}}</span>
+                                <span class="text-weight-medium">{{ Math.round(anio.num_descarte) }}</span>
                               </p>
                             </template>
                             <p>
                               Reemplazo (n):
-                              <span class="text-weight-medium">{{Math.round(anio.reemplazo)}}</span>
+                              <span class="text-weight-medium">{{ Math.round(anio.reemplazo) }}</span>
                             </p>
                             <div class="row q-gutter-md items-center content-center">
                               <p class="q-mb-none">Compras (n):</p>
@@ -233,7 +251,7 @@
                           <div class="col-12 col-md-4">
                             <p>
                               Disponibles (n):
-                              <span class="text-weight-medium">{{Math.round(anio.disponibles)}}</span>
+                              <span class="text-weight-medium">{{ Math.round(anio.disponibles) }}</span>
                             </p>
                             <div class="row q-gutter-md items-center content-center">
                               <p class="q-mb-none">Ventas (n):</p>
@@ -274,14 +292,26 @@
                       Unidad animal
                       <q-icon name="fas fa-info-circle" right @click="menu_help2 = !menu_help2"
                               @mouseover="menu_help2 = !menu_help2" @mouseleave="menu_help2 = !menu_help2"></q-icon>
-                      <q-menu :offset="[50, 10]" v-model="menu_help2" no-parent-event>
+                      <q-menu :offset="[50, 10]" v-model="menu_help2" no-parent-event max-width="280px">
                         <q-card dark bordered>
                           <q-card-section>
-                            <div class="text-subtitle2">Unidad Animal</div>
-                            <q-separator></q-separator>
-                            <div class="text-subtitle3"> Una unidad animal equivale a 450 kg <br> de peso vivo y se
-
+                            <div class="text-subtitle1">Unidad Animal</div>
+                            <q-separator dark></q-separator>
+                            <p class="q-mt-sm"> Una unidad animal equivale a 450 kg de peso vivo y se
                               expresa 1UA = 450 kg.
+                            </p>
+                            <div class="text-subtitle2">Relación UA:</div>
+                            <div class="row">
+                              <div class="col-6">
+                                - Vacas: 1 <br>
+                                - Becerros: 0.25 <br>
+                                - Mautes(as): 0.5 <br>
+                              </div>
+                              <div class="col-6">
+                                - Novillas(os): 0.75 <br>
+                                - Toretes: 0.75 <br>
+                                - Toros: 1.5 <br>
+                              </div>
                             </div>
                           </q-card-section>
                         </q-card>
@@ -316,7 +346,7 @@
             <p class="text-h5 text-weight-light">Simulador</p>
             <p class="text-subtitle2 text-weight-medium">
               Ingrese los valores iniciales de población animal para ejecutar
-              simulacion
+              la simulacion
             </p>
           </div>
           <q-inner-loading :showing="load_procesar">
@@ -560,7 +590,8 @@ export default {
       anio: 5,
       handleflag: false,
       menu_help: false,
-      menu_help2: false
+      menu_help2: false,
+      limite_vacas: null
     }
   },
   methods: {
@@ -730,9 +761,10 @@ export default {
       data.ventas = 0
       if (data.disponibles) {
         data.ventas = Math.round(
-          (vacas.total + data.disponibles) > 600
-            ? vacas.total + data.disponibles - 600 : 0)
+          (vacas.total + data.disponibles) > this.limite_vacas
+            ? vacas.total + data.disponibles - this.limite_vacas : 0)
       }
+      if (data.ventas > data.disponibles) data.ventas = Math.round(data.disponibles)
       data.total = data.disponibles
       if (data.ventas <= data.disponibles) data.total -= data.ventas
       return data
@@ -840,8 +872,9 @@ export default {
           if (index && compraventa && novilla.disponibles) {
             novilla.ventas =
               Math.round(
-                (novilla.disponibles + this.resultados.vacas[index].total) > 600
-                  ? novilla.disponibles + this.resultados.vacas[index].total - 600 : 0)
+                (novilla.disponibles + this.resultados.vacas[index].total) > this.limite_vacas
+                  ? novilla.disponibles + this.resultados.vacas[index].total - this.limite_vacas : 0)
+            if (novilla.ventas > novilla.disponibles) novilla.ventas = Math.round(novilla.disponibles)
           }
           novilla.total = novilla.disponibles - novilla.ventas >= 0 ? novilla.disponibles - novilla.ventas : 0
         })
