@@ -120,7 +120,7 @@ module.exports = function (/* ctx */) {
       manifest: {
         name: 'MOREVA APP',
         short_name: 'MOREVA',
-        description: 'Movimiento de rabaños vacunos - simulador',
+        description: 'Movimiento de rebaños vacunos - simulador',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
