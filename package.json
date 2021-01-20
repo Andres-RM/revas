@@ -6,7 +6,7 @@
   "author": "andres <ramireznadres1994@gmail.com>",
   "private": true,
   "scripts": {
-    "build": "quasar build -m pwa",
+    "build": "quasar build",
     "lint": "eslint --ext .js,.vue ./",
     "test": "echo \"No test specified\" && exit 0"
   },
