@@ -44,6 +44,7 @@ module.exports = function (/* ctx */) {
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
+      publicPath: '',
       vueRouterMode: 'hash', // available values: 'hash', 'history'
 
       // transpile: false,
